@@ -8,10 +8,11 @@ const port = env.PORT || 3000
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-mongoose.connect(env.DATABASE_CONNECTION as string).then(() => {
-  app
-    .listen(port, () => {
+mongoose
+  .connect(env.DATABASE_CONNECTION as string)
+  .then(() => {
+    app.listen(port, () => {
       console.log(`MongoDB Connected / Server running on port: ${port}`)
     })
-    .catch((error) => console.log(`Fail to connect to the server: ${error}`))
-})
+  })
+  .catch((error: Error) => console.log(error))
