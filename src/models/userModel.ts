@@ -3,9 +3,9 @@ import { Schema, model } from 'mongoose'
 interface IUserModel {
   firstName: string
   lastName: string
+  userName: string
   cpf: string
   emailAddress: string
-  userName: string
   phoneNumber: string
   dateOfBirth: Date
   gender: string
@@ -26,4 +26,4 @@ const userModelSchema = new Schema<IUserModel>({
 
 const UserModel = model<IUserModel>('User', userModelSchema)
 
-export { UserModel }
+export { UserModel, IUserModel }
