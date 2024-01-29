@@ -41,6 +41,14 @@ export class UserController {
           .send('CPF already registered in the system')
       }
 
+      const matchPassword = user.password !== user.confirmPassword
+
+      if (matchPassword) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .send('The passwords do not match')
+      }
+
       const newUser = { ...user, password: hashPassword }
 
       await UserModel.create(newUser)
