@@ -4,7 +4,10 @@ import bcrypt from 'bcrypt'
 import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
 
-export class UserController {
+interface IUserController {
+  createUser(req: Request, res: Response)
+}
+export class UserController implements IUserController {
   async createUser(req: Request, res: Response) {
     const userSchema = z.object({
       firstName: z.string({ required_error: 'Name is required' }).optional(),

@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
 
-export class EventController {
+interface IEventController {
+  createEvent(req: Request, res: Response)
+}
+export class EventController implements IEventController {
   async createEvent(req: Request, res: Response) {
     const eventSchema = z.object({
       eventName: z
