@@ -9,7 +9,6 @@ interface IUserModel {
   phoneNumber: string
   dateOfBirth: Date
   gender: string
-  createdAt: Date
 }
 
 const userModelSchema = new Schema<IUserModel>({
@@ -21,7 +20,6 @@ const userModelSchema = new Schema<IUserModel>({
   phoneNumber: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: false },
-  createdAt: { type: Date, require: true },
 })
 
 const UserModel = model<IUserModel>('User', userModelSchema)
