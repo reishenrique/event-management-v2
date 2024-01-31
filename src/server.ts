@@ -1,18 +1,11 @@
 import mongoose from 'mongoose'
-import express from 'express'
 import { env } from '../src/database/env'
-import routes from './routes'
+import { app } from '../src/app'
 
-const app = express()
-const port = env.PORT || 3000
-
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
-app.use(routes)
+const port = env.PORT || 3001
 
 mongoose
-  .connect(env.DATABASE_CONNECTION as string)
+  .connect(env.DABASE_CONNECTION)
   .then(() => {
     app.listen(port, () => {
       console.log(`MongoDB Connected / Server running on port: ${port}`)
