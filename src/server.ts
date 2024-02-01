@@ -1,14 +1,21 @@
 import mongoose from 'mongoose'
-import { env } from '../src/database/env'
 import { app } from '../src/app'
+import 'dotenv/config'
 
-const port = env.PORT || 3001
+const port = process.env.PORT || 3000
+const stringConnection = process.env.DATABASE_CONNECTION as string
 
-mongoose
-  .connect(env.DABASE_CONNECTION)
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`MongoDB Connected / Server running on port: ${port}`)
+async function connectDatabase() {
+  const mongooseConnection = mongoose
+    .connect(stringConnection)
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`MongoDB Connected / Server running on port: ${port}`)
+      })
     })
-  })
-  .catch((error: Error) => console.log(error))
+    .catch((error: Error) => console.log(error))
+
+  return mongooseConnection
+}
+
+connectDatabase()
