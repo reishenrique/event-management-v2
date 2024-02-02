@@ -1,14 +1,14 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from "mongoose";
 
 interface IUserModel {
-  firstName: string
-  lastName: string
-  userName: string
-  cpf: string
-  emailAddress: string
-  phoneNumber: string
-  dateOfBirth: Date
-  gender: string
+  firstName: string;
+  lastName: string;
+  userName: string;
+  cpf: string;
+  emailAddress: string;
+  phoneNumber: string;
+  dateOfBirth: Date;
+  gender: string;
 }
 
 const userModelSchema = new Schema<IUserModel>({
@@ -20,8 +20,8 @@ const userModelSchema = new Schema<IUserModel>({
   phoneNumber: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   gender: { type: String, required: false },
-})
+});
 
-const UserModel = model<IUserModel>('User', userModelSchema)
+const UserModel = model<IUserModel>("User", userModelSchema);
 
-export { UserModel, IUserModel }
+export { UserModel, IUserModel };

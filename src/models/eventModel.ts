@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model } from "mongoose";
 
 interface IEventModel {
-  eventName: string
-  descriptionEvent: string
-  date: Date
-  location: string
-  typeEvent: string
-  ticketPrice: number
-  venueCapacity: number
-  contactInformation: string
-  paymentMethods: string
-  createdAt: Date
+  eventName: string;
+  descriptionEvent: string;
+  date: Date;
+  location: string;
+  typeEvent: string;
+  ticketPrice: number;
+  venueCapacity: number;
+  contactInformation: string;
+  paymentMethods: string;
+  createdAt: Date;
 }
 
 const eventModelSchema = new Schema<IEventModel>({
@@ -24,8 +24,8 @@ const eventModelSchema = new Schema<IEventModel>({
   contactInformation: { type: String, required: true },
   paymentMethods: { type: String, required: true },
   createdAt: { type: Date, require: true },
-})
+});
 
-const EventModel = model<IEventModel>('Event', eventModelSchema)
+const EventModel = model<IEventModel>("Event", eventModelSchema);
 
-export { EventModel }
+export { EventModel };
