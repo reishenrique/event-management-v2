@@ -9,7 +9,7 @@ interface IUserController {
 }
 
 class UserController implements IUserController {
-  async createUser(req: Request, res: Response): Promise<object> {
+  public async createUser(req: Request, res: Response): Promise<object> {
     const userSchema = z.object({
       firstName: z.string({ required_error: 'Name is required' }).optional(),
       lastName: z.string({ required_error: 'Lastname is required' }).optional(),

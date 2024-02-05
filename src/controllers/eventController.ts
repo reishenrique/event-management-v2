@@ -7,7 +7,7 @@ interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
 }
 export class EventController implements IEventController {
-  async createEvent(req: Request, res: Response): Promise<any> {
+  public async createEvent(req: Request, res: Response): Promise<any> {
     const eventSchema = z.object({
       eventName: z
         .string({ required_error: 'Event name is required' })
