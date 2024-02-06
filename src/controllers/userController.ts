@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
@@ -14,31 +15,44 @@ class UserController implements IUserController {
       firstName: z.string({ required_error: 'Name is required' }).optional(),
       lastName: z.string({ required_error: 'Lastname is required' }).optional(),
       userName: z.string({ required_error: 'Username is required' }).optional(),
-      cpf: z.string({ required_error: 'CPF is required' }).optional(),
+      cpf: z
+        .string({ required_error: 'CPF is required' })
+        .length(11, { message: 'The CPF need to contain 11 digits' })
+        .optional(),
+      cnpj: z
+        .string({ required_error: 'CNPJ is required' })
+        .length(14, { message: 'The CNPJ need contain 14 digits' })
+        .optional(),
       emailAddress: z
-        .string({ required_error: 'Email is required' })
-        .email()
+        .string()
+        .email({ message: 'Invalid email address' })
         .optional(),
       phoneNumber: z
         .string({ required_error: 'Phone Number is required' })
+        .length(11, { message: 'The phone number must contain 11 digits' })
         .optional(),
-      password: z.string({ required_error: 'Password is required' }).optional(),
+      password: z
+        .string({ required_error: 'Password is required' })
+        .min(6, { message: 'The password must be contain at least 6 digits' })
+        .max(15, {
+          message: 'The password must contain a maximum of 15 digits',
+        })
+        .optional(),
       confirmPassword: z
         .string({
           required_error:
             'Password confirmation must be the same as the main password',
         })
         .optional(),
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z
+        .string({ required_error: 'The date of birth is required' })
+        .optional(),
       gender: z.enum(['Masculine', 'Feminine']).optional(),
     })
 
     try {
       const user = userSchema.parse(req.body)
-      const { cpf } = user
-
-      const saltRounds = 10
-      const hashPassword = bcrypt.hash(user.password as string, saltRounds)
+      const { cpf, cnpj } = user
 
       const userExistsByCPF = await UserModel.findOne({ cpf })
 
@@ -48,6 +62,17 @@ class UserController implements IUserController {
           .send('CPF already registered in the system')
       }
 
+      const userExistsByCNPJ = await UserModel.findOne({ cnpj })
+
+      if (userExistsByCNPJ) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .send('CNPJ already registered in the system')
+      }
+
+      const saltRounds = 10
+      const hashPassword = bcrypt.hash(user.password as string, saltRounds)
+
       const matchPassword = user.password !== user.confirmPassword
 
       if (matchPassword) {
@@ -56,7 +81,10 @@ class UserController implements IUserController {
           .send('The passwords do not match')
       }
 
-      const newUser = { ...user, password: hashPassword }
+      const newUser = {
+        ...user,
+        password: hashPassword,
+      }
 
       await UserModel.create(newUser)
       return res
