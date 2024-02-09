@@ -20,7 +20,7 @@ const userModelSchema = new Schema<IUserModel>({
   emailAddress: { type: String, required: true },
   userName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  dateOfBirth: { type: Date, required: true },
+  dateOfBirth: { type: Date, required: false },
   gender: { type: String, required: false },
 })
 
