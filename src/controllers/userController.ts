@@ -52,7 +52,7 @@ class UserController implements IUserController {
 
     try {
       const user = userSchema.parse(req.body)
-      const { cpf, cnpj } = user
+      const { cpf, cnpj, emailAddress } = user
 
       const userExistsByCPF = await UserModel.findOne({ cpf })
 
@@ -68,6 +68,14 @@ class UserController implements IUserController {
         return res
           .status(StatusCodes.BAD_REQUEST)
           .send('CNPJ already registered in the system')
+      }
+
+      const userExistsByEmail = await UserModel.findOne({ emailAddress })
+
+      if (userExistsByEmail) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .send('E-mail already registered in the system')
       }
 
       const saltRounds = 10
