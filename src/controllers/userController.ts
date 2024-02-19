@@ -143,16 +143,20 @@ class UserController implements IUserController {
   async deleteUserById(req: Request, res: Response): Promise<unknown> {
     const id = req.params.id
 
-    const user = await UserModel.findOne({ _id: id })
+    try {
+      const user = await UserModel.findOne({ _id: id })
 
-    if (!user) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send('User not found or registered')
+      if (!user) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('User not found or registered')
+      }
+
+      await UserModel.deleteOne({ _id: id })
+      res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
+    } catch (error) {
+      throw new Error('Erro ao tentar deletar usuário')
     }
-
-    await UserModel.deleteOne({ _id: id })
-    res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
   }
 }
 
