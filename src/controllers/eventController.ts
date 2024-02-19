@@ -4,10 +4,10 @@ import { EventModel } from '../models/eventModel'
 import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 
 interface IEventController {
-  createEvent(req: Request, res: Response): Promise<object>
+  createEvent(req: Request, res: Response): Promise<unknown>
 }
 export class EventController implements IEventController {
-  public async createEvent(req: Request, res: Response): Promise<any> {
+  public async createEvent(req: Request, res: Response): Promise<unknown> {
     const eventSchema = z.object({
       eventName: z
         .string({ required_error: 'Event name is required' })
