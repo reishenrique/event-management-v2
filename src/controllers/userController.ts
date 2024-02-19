@@ -102,6 +102,7 @@ class UserController implements IUserController {
         .send('User successfully registered')
     } catch (error) {
       console.log('Error when trying to create a user', error)
+
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
@@ -132,6 +133,7 @@ class UserController implements IUserController {
         'Error while completing the user search route processing',
         error,
       )
+
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
@@ -155,7 +157,14 @@ class UserController implements IUserController {
       await UserModel.deleteOne({ _id: id })
       res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
     } catch (error) {
-      throw new Error('Erro ao tentar deletar usuário')
+      console.log(
+        'Error while completing the execution of user deletion by ID',
+        error,
+      )
+
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
     }
   }
 }
