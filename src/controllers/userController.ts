@@ -5,11 +5,14 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
 
 interface IUserController {
-  createUser(req: Request, res: Response): Promise<any>
+  createUser(req: Request, res: Response): Promise<object>
+  getUserByCpf(req: Request, res: Response): Promise<unknown>
+  // updateUser(req: Request, res: Response): Promise<object>
+  deleteUserById(req: Request, res: Response): Promise<unknown>
 }
 
 class UserController implements IUserController {
-  public async createUser(req: Request, res: Response): Promise<object> {
+  async createUser(req: Request, res: Response): Promise<object> {
     const userSchema = z.object({
       firstName: z.string({ required_error: 'Name is required' }).optional(),
       lastName: z.string({ required_error: 'Lastname is required' }).optional(),
@@ -103,6 +106,53 @@ class UserController implements IUserController {
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
     }
+  }
+
+  async getUserByCpf(req: Request, res: Response): Promise<unknown> {
+    const { cpf } = req.params
+
+    if (!cpf) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send('The user CPF was not provided')
+    }
+
+    try {
+      const userCpf = await UserModel.findOne({ cpf })
+
+      if (!userCpf) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('User not found or registered')
+      }
+
+      res.status(StatusCodes.OK).json(userCpf)
+    } catch (error) {
+      console.log(
+        'Error while completing the user search route processing',
+        error,
+      )
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  // async updateUser(req: Request, res: Response): Promise<object> {}
+
+  async deleteUserById(req: Request, res: Response): Promise<unknown> {
+    const id = req.params.id
+
+    const user = await UserModel.findOne({ _id: id })
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send('User not found or registered')
+    }
+
+    await UserModel.deleteOne({ _id: id })
+    res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
   }
 }
 
