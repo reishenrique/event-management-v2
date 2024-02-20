@@ -6,9 +6,9 @@ import { UserModel } from '../models/userModel'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
-  getUserByCpf(req: Request, res: Response): Promise<unknown>
-  // updateUser(req: Request, res: Response): Promise<object>
-  deleteUserById(req: Request, res: Response): Promise<unknown>
+  getUserByCpf(req: Request, res: Response): Promise<object>
+  updateUserById(req: Request, res: Response): Promise<object>
+  deleteUserById(req: Request, res: Response): Promise<object>
 }
 
 class UserController implements IUserController {
@@ -97,7 +97,7 @@ class UserController implements IUserController {
     }
   }
 
-  async getUserByCpf(req: Request, res: Response): Promise<unknown> {
+  async getUserByCpf(req: Request, res: Response): Promise<object> {
     const { cpf } = req.params
 
     if (!cpf) {
@@ -115,7 +115,7 @@ class UserController implements IUserController {
           .send('User not found or registered')
       }
 
-      res.status(StatusCodes.OK).json(userCpf)
+      return res.status(StatusCodes.OK).json(userCpf)
     } catch (error) {
       console.log(
         'Error while completing the user search route processing',
@@ -128,9 +128,34 @@ class UserController implements IUserController {
     }
   }
 
-  // async updateUser(req: Request, res: Response): Promise<object> {}
+  async updateUserById(req: Request, res: Response): Promise<object> {
+    try {
+      const { id } = req.params
+      const userUpdates = req.body
 
-  async deleteUserById(req: Request, res: Response): Promise<unknown> {
+      const user = await UserModel.findByIdAndUpdate(id, userUpdates, {
+        new: true,
+      })
+
+      if (!user) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('User not found for update')
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'User data successfully updated' })
+    } catch (error) {
+      console.log('Error while trying to update user', error)
+
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  async deleteUserById(req: Request, res: Response): Promise<object> {
     const id = req.params.id
 
     try {
@@ -143,7 +168,9 @@ class UserController implements IUserController {
       }
 
       await UserModel.deleteOne({ _id: id })
-      res.status(StatusCodes.OK).json({ message: 'User deleted successfully' })
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'User deleted successfully' })
     } catch (error) {
       console.log(
         'Error while completing the execution of user deletion by ID',
