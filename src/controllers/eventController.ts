@@ -15,6 +15,10 @@ export class EventController implements IEventController {
       eventDescription: z
         .string({ required_error: 'Description is required' })
         .optional(),
+      cnpj: z
+        .string({ required_error: 'CNPJ is required' })
+        .length(14, { message: 'The CNPJ need contain 14 digits' })
+        .optional(),
       date: z
         .date({ required_error: 'Event date and time are required' })
         .optional(),
@@ -39,13 +43,22 @@ export class EventController implements IEventController {
 
     try {
       const event = eventSchema.parse(req.body)
-      const { eventName } = event
+      const { eventName, cnpj } = event
 
       const eventExistsByEventName = await EventModel.findOne({ eventName })
+
       if (eventExistsByEventName) {
         return res
           .status(StatusCodes.BAD_REQUEST)
           .send('Event already registered in the system')
+      }
+
+      const eventExistsByCNPJ = await EventModel.findOne({ cnpj })
+
+      if (eventExistsByCNPJ) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .send('CNPJ already registered in the system')
       }
 
       const newEvent = event
