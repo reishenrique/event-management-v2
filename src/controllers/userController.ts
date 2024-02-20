@@ -21,10 +21,6 @@ class UserController implements IUserController {
         .string({ required_error: 'CPF is required' })
         .length(11, { message: 'The CPF need to contain 11 digits' })
         .optional(),
-      cnpj: z
-        .string({ required_error: 'CNPJ is required' })
-        .length(14, { message: 'The CNPJ need contain 14 digits' })
-        .optional(),
       emailAddress: z
         .string()
         .email({ message: 'Invalid email address' })
@@ -54,7 +50,7 @@ class UserController implements IUserController {
 
     try {
       const user = userSchema.parse(req.body)
-      const { cpf, cnpj, emailAddress } = user
+      const { cpf, emailAddress } = user
 
       const userExistsByCPF = await UserModel.findOne({ cpf })
 
@@ -62,14 +58,6 @@ class UserController implements IUserController {
         return res
           .status(StatusCodes.BAD_REQUEST)
           .send('CPF already registered in the system')
-      }
-
-      const userExistsByCNPJ = await UserModel.findOne({ cnpj })
-
-      if (userExistsByCNPJ) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('CNPJ already registered in the system')
       }
 
       const userExistsByEmail = await UserModel.findOne({ emailAddress })

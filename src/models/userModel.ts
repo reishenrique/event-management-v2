@@ -5,7 +5,6 @@ interface IUserModel {
   lastName: string
   userName: string
   cpf: string
-  cnpj: string
   emailAddress: string
   phoneNumber: string
   dateOfBirth: Date
@@ -16,7 +15,6 @@ const userModelSchema = new Schema<IUserModel>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   cpf: { type: String, required: true },
-  cnpj: { type: String, required: true },
   emailAddress: { type: String, required: true },
   userName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
