@@ -7,6 +7,7 @@ const routes = Router()
 routes.post('/createUser', new UserController().createUser)
 routes.get('/user/:cpf', new UserController().getUserByCpf)
 routes.delete('/user/:id', new UserController().deleteUserById)
+routes.put('/user/:id', new UserController().updateUserById)
 
 routes.post('/createEvent', new EventController().createEvent)
 
