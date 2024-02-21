@@ -4,8 +4,9 @@ import EventController from '../src/controllers/eventController'
 
 const routes = Router()
 
-routes.post('/createUser', new UserController().createUser)
-routes.get('/user/:cpf', new UserController().getUserByCpf)
+routes.post('/user/createUser', new UserController().createUser)
+routes.get('/user/bycpf/:cpf', new UserController().getUserByCpf)
+routes.get('/user/byid/:id', new UserController().getUserById)
 routes.delete('/user/:id', new UserController().deleteUserById)
 routes.put('/user/:id', new UserController().updateUserById)
 
