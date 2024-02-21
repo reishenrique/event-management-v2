@@ -7,6 +7,7 @@ import { UserModel } from '../models/userModel'
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
   getUserByCpf(req: Request, res: Response): Promise<object>
+  getUserById(req: Request, res: Response): Promise<object>
   updateUserById(req: Request, res: Response): Promise<object>
   deleteUserById(req: Request, res: Response): Promise<object>
 }
@@ -89,7 +90,7 @@ class UserController implements IUserController {
         .status(StatusCodes.CREATED)
         .send('User successfully registered')
     } catch (error) {
-      console.log('Error when trying to create a user', error)
+      console.log('Error while executing the user creation endpoint', error)
 
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -118,10 +119,37 @@ class UserController implements IUserController {
       return res.status(StatusCodes.OK).json(userCpf)
     } catch (error) {
       console.log(
-        'Error while completing the user search route processing',
+        'Error while executing the endpoint to search for a user by CPF',
         error,
       )
 
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  async getUserById(req: Request, res: Response): Promise<object> {
+    const { id } = req.params
+
+    if (!id) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .send('User ID is required to proceed with the search execution')
+    }
+
+    try {
+      const userId = await UserModel.findById(id)
+
+      if (!userId) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('User ID not found or entered incorrectly')
+      }
+
+      return res.status(StatusCodes.OK).json(userId)
+    } catch (error) {
+      console.log('Error while executing the user search endpoint by ID', error)
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
@@ -147,7 +175,10 @@ class UserController implements IUserController {
         .status(StatusCodes.OK)
         .json({ message: 'User data successfully updated' })
     } catch (error) {
-      console.log('Error while trying to update user', error)
+      console.log(
+        'Error while executing the endpoint for updating the user by ID',
+        error,
+      )
 
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -156,7 +187,7 @@ class UserController implements IUserController {
   }
 
   async deleteUserById(req: Request, res: Response): Promise<object> {
-    const id = req.params.id
+    const { id } = req.params
 
     try {
       const user = await UserModel.findOne({ _id: id })
@@ -173,7 +204,7 @@ class UserController implements IUserController {
         .json({ message: 'User deleted successfully' })
     } catch (error) {
       console.log(
-        'Error while completing the execution of user deletion by ID',
+        'Error while executing the endpoint for user deletion by ID',
         error,
       )
 
