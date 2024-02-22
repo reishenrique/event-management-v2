@@ -43,9 +43,6 @@ class UserController implements IUserController {
             'Password confirmation must be the same as the main password',
         })
         .optional(),
-      dateOfBirth: z
-        .string({ required_error: 'The date of birth is required' })
-        .optional(),
       gender: z.enum(['Masculine', 'Feminine']).optional(),
     })
 
