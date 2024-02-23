@@ -2,28 +2,26 @@ import { Schema, model } from 'mongoose'
 
 interface IEventModel {
   eventName: string
-  descriptionEvent: string
+  eventDescription: string
   cnpj: string
-  date: Date
   location: string
-  typeEvent: string
-  ticketPrice: number
+  eventType: string
+  eventTicketPrice: number
   venueCapacity: number
   contactInformation: string
-  paymentMethods: string
+  paymentMethodOption: string
 }
 
 const eventModelSchema = new Schema<IEventModel>({
   eventName: { type: String, required: true },
-  descriptionEvent: { type: String, required: true },
+  eventDescription: { type: String, required: true },
   cnpj: { type: String, required: true },
-  date: { type: Date, required: true },
   location: { type: String, required: true },
-  typeEvent: { type: String, required: true },
-  ticketPrice: { type: Number, required: true },
+  eventType: { type: String, required: true },
+  eventTicketPrice: { type: Number, required: true },
   venueCapacity: { type: Number, required: true },
   contactInformation: { type: String, required: true },
-  paymentMethods: { type: String, required: true },
+  paymentMethodOption: { type: String, required: true },
 })
 
 const EventModel = model<IEventModel>('Event', eventModelSchema)
