@@ -10,6 +10,6 @@ routes.get('/user/byid/:id', new UserController().getUserById)
 routes.delete('/user/:id', new UserController().deleteUserById)
 routes.put('/user/:id', new UserController().updateUserById)
 
-routes.post('/createEvent', new EventController().createEvent)
+routes.post('/event/createEvent', new EventController().createEvent)
 
 export default routes
