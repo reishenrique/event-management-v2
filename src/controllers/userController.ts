@@ -101,7 +101,7 @@ class UserController implements IUserController {
     if (!cpf) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .send('The user CPF was not provided')
+        .send('User ID is required to proceed with the search execution')
     }
 
     try {
