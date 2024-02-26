@@ -7,9 +7,11 @@ import { paymentMethodEnum } from '../enum/paymentMethodEnum'
 
 interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
+  getEventByCnpj(req: Request, res: Response): Promise<object>
+  getEventById(req: Request, res: Response): Promise<object>
 }
 export class EventController implements IEventController {
-  public async createEvent(req: Request, res: Response): Promise<object> {
+  async createEvent(req: Request, res: Response): Promise<object> {
     const eventSchema = z.object({
       eventName: z
         .string({ required_error: 'Event name is required' })
@@ -66,10 +68,10 @@ export class EventController implements IEventController {
         .optional(),
     })
 
-    try {
-      const event = eventSchema.parse(req.body)
-      const { eventName, cnpj } = event
+    const event = eventSchema.parse(req.body)
+    const { eventName, cnpj } = event
 
+    try {
       const eventExistsByEventName = await EventModel.findOne({ eventName })
 
       if (eventExistsByEventName) {
@@ -94,6 +96,66 @@ export class EventController implements IEventController {
         .send('Event successfully registered')
     } catch (error) {
       console.log('Error when trying to create an event.', error)
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  async getEventById(req: Request, res: Response): Promise<object> {
+    const { id } = req.params
+
+    if (!id) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send('Event ID is required to proceed with the search execution')
+    }
+
+    try {
+      const getEventById = await EventModel.findById(id)
+
+      if (!getEventById) {
+        return res.status(StatusCodes.NOT_FOUND).send('Event ID not found')
+      }
+
+      return res.status(StatusCodes.OK).json(getEventById)
+    } catch (error) {
+      console.log(
+        'Error while executing the endpoint to search for a user by ID',
+        error,
+      )
+
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  public async getEventByCnpj(req: Request, res: Response): Promise<object> {
+    const { cnpj } = req.params
+
+    if (!cnpj) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send('Event CNPJ is required to proceed with the search execution')
+    }
+
+    try {
+      const getEventByCnpj = await EventModel.findOne({ cnpj })
+
+      if (!getEventByCnpj) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('User not found or registered')
+      }
+
+      return res.status(StatusCodes.OK).json(getEventByCnpj)
+    } catch (error) {
+      console.log(
+        'Error while executing the endpoint to search for a user by CNPJ',
+        error,
+      )
+
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
