@@ -13,5 +13,7 @@ routes.put('/user/:id', new UserController().updateUserById)
 routes.post('/event/createEvent', new EventController().createEvent)
 routes.get('/event/getbyid/:id', new EventController().getEventById)
 routes.get('/event/getbycnpj/:cnpj', new EventController().getEventByCnpj)
+routes.delete('/event/:id', new EventController().deleteEventById)
+routes.put('/event/:id', new EventController().updateEventById)
 
 export default routes
