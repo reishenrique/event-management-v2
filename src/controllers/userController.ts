@@ -105,15 +105,15 @@ class UserController implements IUserController {
     }
 
     try {
-      const userCpf = await UserModel.findOne({ cpf })
+      const getUserByCpf = await UserModel.findOne({ cpf })
 
-      if (!userCpf) {
+      if (!getUserByCpf) {
         return res
           .status(StatusCodes.NOT_FOUND)
           .send('User not found or registered')
       }
 
-      return res.status(StatusCodes.OK).json(userCpf)
+      return res.status(StatusCodes.OK).json(getUserByCpf)
     } catch (error) {
       console.log(
         'Error while executing the endpoint to search for a user by CPF',
@@ -136,15 +136,15 @@ class UserController implements IUserController {
     }
 
     try {
-      const userId = await UserModel.findById(id)
+      const getUserById = await UserModel.findById(id)
 
-      if (!userId) {
+      if (!getUserById) {
         return res
           .status(StatusCodes.NOT_FOUND)
           .send('User ID not found or entered incorrectly')
       }
 
-      return res.status(StatusCodes.OK).json(userId)
+      return res.status(StatusCodes.OK).json(getUserById)
     } catch (error) {
       console.log('Error while executing the user search endpoint by ID', error)
       return res
@@ -156,9 +156,9 @@ class UserController implements IUserController {
   async updateUserById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-      const userUpdates = req.body
+      const dataUserUpdate = req.body
 
-      const user = await UserModel.findByIdAndUpdate(id, userUpdates, {
+      const user = await UserModel.findByIdAndUpdate(id, dataUserUpdate, {
         new: true,
       })
 
@@ -187,9 +187,9 @@ class UserController implements IUserController {
     const { id } = req.params
 
     try {
-      const user = await UserModel.findOne({ _id: id })
+      const getUserById = await UserModel.findOne({ _id: id })
 
-      if (!user) {
+      if (!getUserById) {
         return res
           .status(StatusCodes.NOT_FOUND)
           .send('User not found or registered')
