@@ -9,6 +9,8 @@ interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
   getEventByCnpj(req: Request, res: Response): Promise<object>
   getEventById(req: Request, res: Response): Promise<object>
+  updateEventById(req: Request, res: Response): Promise<object>
+  deleteEventById(req: Request, res: Response): Promise<object>
 }
 export class EventController implements IEventController {
   async createEvent(req: Request, res: Response): Promise<object> {
@@ -131,7 +133,7 @@ export class EventController implements IEventController {
     }
   }
 
-  public async getEventByCnpj(req: Request, res: Response): Promise<object> {
+  async getEventByCnpj(req: Request, res: Response): Promise<object> {
     const { cnpj } = req.params
 
     if (!cnpj) {
@@ -159,6 +161,64 @@ export class EventController implements IEventController {
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+  }
+
+  async updateEventById(req: Request, res: Response): Promise<object> {
+    try {
+      const { id } = req.params
+      const dataEventUpdate = req.body
+
+      const getEventToUpate = await EventModel.findByIdAndUpdate(
+        id,
+        dataEventUpdate,
+        {
+          new: true,
+        },
+      )
+
+      if (!getEventToUpate) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send('Event not found to perform data update')
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ message: 'Event data successfully updated' })
+    } catch (error) {
+      console.log(
+        'Error while executing the endpoint for updating the event by ID',
+      )
+
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
+    }
+  }
+
+  async deleteEventById(req: Request, res: Response): Promise<object> {
+    try {
+      const { id } = req.params
+
+      const getEventById = await EventModel.findOne({ _id: id })
+
+      if (!getEventById) {
+        return res.status(StatusCodes.NOT_FOUND).send('Event not found')
+      }
+
+      await EventModel.deleteOne({ _id: id })
+
+      return res.status(StatusCodes.OK).send('Event successfully deleted')
+    } catch (error) {
+      console.log(
+        'Error while executing the endpoint for event deletion by ID',
+        error,
+      )
+
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
     }
   }
 }
