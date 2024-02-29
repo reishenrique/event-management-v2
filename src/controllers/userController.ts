@@ -66,8 +66,11 @@ class UserController implements IUserController {
           .send('E-mail already registered in the system')
       }
 
-      const saltRounds = 10
-      const hashPassword = bcrypt.hash(user.password as string, saltRounds)
+      const saltRounds = await bcrypt.genSalt(10)
+      const hashPassword = await bcrypt.hash(
+        user.password as string,
+        saltRounds,
+      )
 
       const matchPassword = user.password !== user.confirmPassword
 
