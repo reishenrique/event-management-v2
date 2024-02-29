@@ -49,9 +49,13 @@ class AuthController implements IAuthController {
         return res.status(StatusCodes.UNAUTHORIZED).send('Invalid password')
       }
 
-      const token = jwt.sign({ id: user._id }, secret || '', {
-        expiresIn: '8h',
-      })
+      const token = jwt.sign(
+        { id: user._id, email: user.emailAddress },
+        secret || '',
+        {
+          expiresIn: '8h',
+        },
+      )
 
       return res
         .status(StatusCodes.OK)
