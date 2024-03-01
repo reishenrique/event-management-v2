@@ -43,7 +43,7 @@ class UserController implements IUserController {
             'Password confirmation must be the same as the main password',
         })
         .optional(),
-      gender: z.enum(['Masculine', 'Feminine']).optional(),
+      gender: z.enum(['Male', 'Female']).optional(),
     })
 
     try {

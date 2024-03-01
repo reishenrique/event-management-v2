@@ -19,7 +19,7 @@ const userModelSchema = new Schema<IUserModel>({
   emailAddress: { type: String, required: true },
   userName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  gender: { type: String, equired: false },
+  gender: { type: String, required: false },
 })
 
 const UserModel = model<IUserModel>('User', userModelSchema)
