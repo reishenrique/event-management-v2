@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from 'express'
-import 'dotenv/config'
-import jwt from 'jsonwebtoken'
 import { StatusCodes, getReasonPhrase } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
+import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import z from 'zod'
+import 'dotenv/config'
 
 interface IAuthController {
   login(req: Request, res: Response): Promise<object>
+  authenticated(req: Request, res: Response): Promise<object>
 }
+
+const secret = process.env.SECRET
 
 class AuthController implements IAuthController {
   async login(req: Request, res: Response): Promise<object> {
@@ -29,8 +32,6 @@ class AuthController implements IAuthController {
       })
 
       const loginUser = loginSchema.parse(req.body)
-
-      const secret = process.env.SECRET
       const { emailAddress, password } = loginUser
 
       const user = await UserModel.findOne({ emailAddress })
@@ -70,6 +71,12 @@ class AuthController implements IAuthController {
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
     }
+  }
+
+  async authenticated(_req: Request, res: Response): Promise<object> {
+    return res
+      .status(StatusCodes.OK)
+      .json({ statusCode: 200, message: 'Authenticated endpoint' })
   }
 }
 
