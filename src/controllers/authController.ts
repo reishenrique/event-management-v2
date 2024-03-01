@@ -76,7 +76,7 @@ class AuthController implements IAuthController {
   async authenticated(_req: Request, res: Response): Promise<object> {
     return res
       .status(StatusCodes.OK)
-      .json({ statusCode: 200, message: 'Authenticated endpoint' })
+      .json({ statusCode: 200, message: 'Token authenticated' })
   }
 }
 
