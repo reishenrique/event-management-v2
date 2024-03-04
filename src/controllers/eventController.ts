@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import { EventModel } from '../models/eventModel'
-import { StatusCodes, getReasonPhrase } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 import { eventTypeEnum } from '../enum/eventTypeEnum'
 import { paymentMethodEnum } from '../enum/paymentMethodEnum'
 
@@ -77,30 +77,36 @@ export class EventController implements IEventController {
       const eventExistsByEventName = await EventModel.findOne({ eventName })
 
       if (eventExistsByEventName) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('Event already registered in the system')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: 'Event already registered in the system',
+        })
       }
 
       const eventExistsByCNPJ = await EventModel.findOne({ cnpj })
 
       if (eventExistsByCNPJ) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('The CNPJ for event registration is already in use')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: 'The CNPJ for event registration is already in use',
+        })
       }
 
       const newEvent = event
 
       await EventModel.create(newEvent)
-      return res
-        .status(StatusCodes.CREATED)
-        .send('Event successfully registered')
+      return res.status(StatusCodes.CREATED).json({
+        statusCode: StatusCodes.CREATED,
+        message: 'Event successfully registered',
+        event: newEvent,
+      })
     } catch (error) {
-      console.log('Error when trying to create an event.', error)
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      console.log('Error when trying to create an event', error)
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error when trying to create an event',
+      })
     }
   }
 
@@ -108,28 +114,36 @@ export class EventController implements IEventController {
     const { id } = req.params
 
     if (!id) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send('Event ID is required to proceed with the search execution')
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Event ID is required to proceed with the search execution',
+      })
     }
 
     try {
       const getEventById = await EventModel.findById(id)
 
       if (!getEventById) {
-        return res.status(StatusCodes.NOT_FOUND).send('Event ID not found')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Event ID not found',
+        })
       }
 
-      return res.status(StatusCodes.OK).json(getEventById)
+      return res
+        .status(StatusCodes.OK)
+        .json({ statusCode: StatusCodes.OK, user: getEventById })
     } catch (error) {
       console.log(
         'Error while executing the endpoint to search for a user by ID',
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message:
+          'Error while executing the endpoint to search for a user by ID',
+      })
     }
   }
 
@@ -137,30 +151,36 @@ export class EventController implements IEventController {
     const { cnpj } = req.params
 
     if (!cnpj) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send('Event CNPJ is required to proceed with the search execution')
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Event CNPJ is required to proceed with the search execution',
+      })
     }
 
     try {
       const getEventByCnpj = await EventModel.findOne({ cnpj })
 
       if (!getEventByCnpj) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .send('User not found or registered')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'User not found or registered',
+        })
       }
 
-      return res.status(StatusCodes.OK).json(getEventByCnpj)
+      return res
+        .status(StatusCodes.OK)
+        .json({ statusCode: StatusCodes.OK, user: getEventByCnpj })
     } catch (error) {
       console.log(
         'Error while executing the endpoint to search for a user by CNPJ',
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message:
+          'Error while executing the endpoint to search for a user by CNPJ',
+      })
     }
   }
 
@@ -183,17 +203,21 @@ export class EventController implements IEventController {
           .send('Event not found to perform data update')
       }
 
-      return res
-        .status(StatusCodes.OK)
-        .json({ message: 'Event data successfully updated' })
+      return res.status(StatusCodes.OK).json({
+        statusCode: StatusCodes.OK,
+        message: 'Event data successfully updated',
+        updatedEvent: getEventToUpate,
+      })
     } catch (error) {
       console.log(
         'Error while executing the endpoint for updating the event by ID',
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message:
+          'Error while executing the endpoint for updating the event by ID',
+      })
     }
   }
 
@@ -204,21 +228,28 @@ export class EventController implements IEventController {
       const getEventById = await EventModel.findOne({ _id: id })
 
       if (!getEventById) {
-        return res.status(StatusCodes.NOT_FOUND).send('Event not found')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'Event not found',
+        })
       }
 
       await EventModel.deleteOne({ _id: id })
 
-      return res.status(StatusCodes.OK).send('Event successfully deleted')
+      return res.status(StatusCodes.OK).json({
+        statusCode: StatusCodes.OK,
+        message: 'Event successfully deleted',
+      })
     } catch (error) {
       console.log(
         'Error while executing the endpoint for event deletion by ID',
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error while executing the endpoint for event deletion by ID',
+      })
     }
   }
 }
