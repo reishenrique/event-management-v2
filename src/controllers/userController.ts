@@ -86,15 +86,19 @@ class UserController implements IUserController {
       }
 
       await UserModel.create(newUser)
-      return res
-        .status(StatusCodes.CREATED)
-        .send('User successfully registered')
+
+      return res.status(StatusCodes.CREATED).json({
+        statusCode: StatusCodes.CREATED,
+        message: 'User created successfully',
+        user: newUser,
+      })
     } catch (error) {
       console.log('Error while executing the user creation endpoint', error)
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error occurred while executing the user creation endpoint',
+      })
     }
   }
 
@@ -102,9 +106,10 @@ class UserController implements IUserController {
     const { cpf } = req.params
 
     if (!cpf) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send('User ID is required to proceed with the search execution')
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'User ID is required to proceed with the search execution',
+      })
     }
 
     try {
@@ -113,19 +118,23 @@ class UserController implements IUserController {
       if (!getUserByCpf) {
         return res
           .status(StatusCodes.NOT_FOUND)
-          .send('User not found or registered')
+          .json({ message: 'User not found or registered' })
       }
 
-      return res.status(StatusCodes.OK).json(getUserByCpf)
+      return res
+        .status(StatusCodes.OK)
+        .json({ statusCode: StatusCodes.OK, user: getUserByCpf })
     } catch (error) {
       console.log(
         'Error while executing the endpoint to search for a user by CPF',
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message:
+          'Error occurred while executing the endpoint for searching users by CPF',
+      })
     }
   }
 
@@ -133,26 +142,32 @@ class UserController implements IUserController {
     const { id } = req.params
 
     if (!id) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send('User ID is required to proceed with the search execution')
+      return res.status(StatusCodes.NOT_FOUND).json({
+        statusCode: StatusCodes.NOT_FOUND,
+        message: 'User ID is required to proceed with the search execution',
+      })
     }
 
     try {
       const getUserById = await UserModel.findById(id)
 
       if (!getUserById) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .send('User ID not found or entered incorrectly')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'User ID not found or entered incorrectly',
+        })
       }
 
-      return res.status(StatusCodes.OK).json(getUserById)
+      return res
+        .status(StatusCodes.OK)
+        .json({ statusCode: StatusCodes.OK, user: getUserById })
     } catch (error) {
       console.log('Error while executing the user search endpoint by ID', error)
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error while executing the user search endpoint by ID',
+      })
     }
   }
 
@@ -166,23 +181,28 @@ class UserController implements IUserController {
       })
 
       if (!user) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .send('User not found for update')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'User not found for update',
+        })
       }
 
-      return res
-        .status(StatusCodes.OK)
-        .json({ message: 'User data successfully updated' })
+      return res.status(StatusCodes.OK).json({
+        statusCode: StatusCodes.OK,
+        message: 'User data successfully updated',
+        updatedUser: user,
+      })
     } catch (error) {
       console.log(
         'Error while executing the endpoint for updating the user by ID',
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message:
+          'Error while executing the endpoint for updating the user by ID',
+      })
     }
   }
 
@@ -193,9 +213,10 @@ class UserController implements IUserController {
       const getUserById = await UserModel.findOne({ _id: id })
 
       if (!getUserById) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .send('User not found or registered')
+        return res.status(StatusCodes.NOT_FOUND).json({
+          statusCode: StatusCodes.NOT_FOUND,
+          message: 'User not found or registered',
+        })
       }
 
       await UserModel.deleteOne({ _id: id })
@@ -208,9 +229,10 @@ class UserController implements IUserController {
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCodes: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error while executing the endpoint for user deletion by ID ',
+      })
     }
   }
 }
