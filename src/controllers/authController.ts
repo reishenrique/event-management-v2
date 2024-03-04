@@ -38,7 +38,10 @@ class AuthController implements IAuthController {
       // console.log(user)
 
       if (!user) {
-        return res.status(StatusCodes.UNAUTHORIZED).send('Unauthorized')
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: 'Unauthorized',
+        })
       }
 
       const isValidPassword = await bcrypt.compareSync(
@@ -47,7 +50,10 @@ class AuthController implements IAuthController {
       )
 
       if (!isValidPassword) {
-        return res.status(StatusCodes.UNAUTHORIZED).send('Invalid password')
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          statusCode: StatusCodes.UNAUTHORIZED,
+          message: 'Invalid password',
+        })
       }
 
       const token = jwt.sign(
@@ -67,16 +73,26 @@ class AuthController implements IAuthController {
         error,
       )
 
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error while executing the user login/authentication endpoint',
+      })
     }
   }
 
   async authenticated(_req: Request, res: Response): Promise<object> {
-    return res
-      .status(StatusCodes.OK)
-      .json({ statusCode: 200, message: 'Token authenticated' })
+    try {
+      return res
+        .status(StatusCodes.OK)
+        .json({ statusCode: 200, message: 'Token authenticated' })
+    } catch (error) {
+      console.log('Error while executing the authentication')
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Error while executing the autheticated endpoint',
+      })
+    }
   }
 }
 
