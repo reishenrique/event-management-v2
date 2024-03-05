@@ -1,0 +1,121 @@
+// User Routes
+
+//Create new user
+
+POST http://localhost:3000/api/v2/user/createUser
+Content-Type: application/json
+
+{
+    "firstName": "####",
+	"lastName": "####",
+	"userName": "####",
+	"cpf": "####",
+	"emailAddress": "####",
+	"phoneNumber": "########",
+	"password": "#########",
+	"confirmPassword" :"#######",
+	"gender": "####"
+}
+
+###
+
+// Get user by cpf
+GET http://localhost:3000/api/v2/user/getbycpf/11122233392
+Content-Type: application/json
+
+###
+
+// Get user by ID
+GET http://localhost:3000/api/v2/user/getbyid/65e5e90b4760390944a86f5a
+Content-Type: application/json
+
+###
+
+// Update user by ID
+PUT http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+Content-Type: application/json
+
+{
+    "firstName": "Teste Atualização",
+	"lastName": "Teste Atualização",
+	"userName": "teste1atualizacao"
+}
+
+
+###
+
+// Delete usr by ID
+DELETE http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+Content-Type: application/json
+
+
+###
+
+// Event Routes
+
+// Create new event
+POST http://localhost:3000/api/v2/event/createEvent
+Content-Type: application/json
+
+{
+	"eventName": "Teste Evento",
+	"eventDescription": "Teste Descrição Evento",
+	"cnpj": "12345678901221",
+	"location": "Guarulhos",
+	"eventType": "Social Event",
+	"eventTicketPrice": "1000",
+	"venueCapacity": 1000,
+	"contactInformation": "Teste",
+	"paymentMethodOption": "Credit"
+}
+
+###
+
+// Get event by CNPJ
+
+GET http://localhost:3000/api/v2/event/getbycnpj/12345678901221
+Content-Type: application/json
+
+###
+
+// Get event by ID
+GET http://localhost:3000/api/v2/event/getbyid/65e5e95d4760390944a86f64
+Content-Type: application/json
+
+### 
+
+// Update event by ID
+PUT http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
+Content-Type: application/json
+
+###
+
+// Delete event by ID
+DELETE  http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
+Content-Type: application/json
+
+
+###
+
+// Authentication Routes
+
+// User login
+POST http://localhost:3000/api/v2/auth/login
+Content-Type: application/json
+
+{
+	"emailAddress": "henriqueauth@test.com",
+	"password": "testehenrique"
+}
+
+###
+
+// Verify token
+POST http://localhost:3000/api/v2/auth/verifyToken
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+        eyJpZCI6IjY1ZTFlM2Y4NmY3YTI5ZDNlYThjYzdmMiIsImVtYWlsIjoiaGVucmlxdWVhdXRoQHRlc3QuY29tIiwiaWF0IjoxNzA5NTY0MzU2LCJleHAiOjE3MDk1OTMxNTZ9.
+        2IRekHSmFMgPesd2PhqGfuU0lSq2JI-y8V3RIdLCT78"
+}
