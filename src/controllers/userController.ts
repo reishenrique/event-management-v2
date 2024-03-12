@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
@@ -75,9 +76,10 @@ class UserController implements IUserController {
       const matchPassword = user.password !== user.confirmPassword
 
       if (matchPassword) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('The passwords do not match')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          statusCode: StatusCodes.BAD_REQUEST,
+          message: 'The passwords do not match',
+        })
       }
 
       const newUser = {
