@@ -1,25 +1,29 @@
-// import request from 'supertest'
-// import { app } from '../../app'
+import request from 'supertest'
+import { app } from '../../app'
+import mongoose from 'mongoose'
 
-// describe('UserController', () => {
-//   test('Should create a new user', async () => {
-//     const userData = {
-//       firstName: 'Henrique',
-//       lastName: 'Reis',
-//       userName: 'userhenrique',
-//       cpf: '11122233344',
-//       emailAddress: 'testehenrique@gmail.com',
-//       phoneNumber: '1199992222',
-//       password: 'testesenha',
-//       confirmPassword: 'testesenha',
-//       gender: 'Masculine',
-//     }
+describe('UserController', () => {
+  beforeAll(async () => {
+    app.listen(3000)
+  })
 
-//     const response = await request(app)
-//       .post('/user/createUser')
-//       .send({ userData })
-//       .expect(201)
+  afterAll(async () => {
+    await mongoose.connection.close()
+  })
 
-//     expect(response.body).toHaveProperty('firstName')
-//   })
-// })
+  it('Test /createUser endpoint', async () => {
+    const response = await request(app).post('/api/v2/user/createUser').send({
+      firstName: 'Henrique',
+      lastName: 'Test Jest',
+      userName: 'jesthenrique',
+      cpf: '44477766640',
+      emailAddress: 'henrique@jest.com',
+      phoneNumber: '11951415851',
+      password: 'hprhpr09',
+      confirmPassword: 'hprhpr09',
+      gender: 'Male',
+    })
+
+    expect(response.statusCode).toEqual(201)
+  })
+})
