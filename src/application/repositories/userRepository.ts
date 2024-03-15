@@ -7,7 +7,7 @@ export class UserRepository implements IUserRepository {
     await UserModel.create(newUser)
   }
 
-  async findUserByDocumentCpf(cpf: string) {
+  async findDocumentUserByCpf(cpf: string) {
     const userExistsByCPF = await UserModel.findOne({ cpf })
     return userExistsByCPF
   }

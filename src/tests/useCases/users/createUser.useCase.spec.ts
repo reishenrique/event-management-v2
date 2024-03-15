@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CreateUserUseCase } from './createUser.useCase'
-import { UserRepositoryInMemory } from '../../../tests/mock/userRepositoryInMemory'
-import { IUserRepository } from '../../interfaces/IUserRepository'
+
+import { IUserRepository } from '../../../domain/interfaces/IUserRepository'
+import { CreateUserUseCase } from '../../../domain/useCases/users/createUser.useCase'
+import { UserRepositoryInMemory } from '../../mock/userRepositoryInMemory'
 
 const makeSut = (
   users?: any,
@@ -12,7 +13,7 @@ const makeSut = (
   const mockUserRepository = new UserRepositoryInMemory(users)
   const sut = new CreateUserUseCase(mockUserRepository)
 
-  jest.spyOn(mockUserRepository, 'findUserByDocumentCpf')
+  jest.spyOn(mockUserRepository, 'findDocumentUserByCpf')
   jest.spyOn(mockUserRepository, 'findUserByEmail')
   jest.spyOn(mockUserRepository, 'createUser')
 
@@ -42,7 +43,7 @@ describe('UserController', () => {
 
     expect(newUser.firstName).toBe(user.firstName)
 
-    expect(mockUserRepository.findUserByDocumentCpf).toHaveBeenCalledTimes(1)
+    expect(mockUserRepository.findDocumentUserByCpf).toHaveBeenCalledTimes(1)
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledTimes(1)
   })
 
@@ -65,7 +66,7 @@ describe('UserController', () => {
       new Error('CPF already registered in the system'),
     )
 
-    expect(mockUserRepository.findUserByDocumentCpf).toHaveBeenCalledTimes(1)
+    expect(mockUserRepository.findDocumentUserByCpf).toHaveBeenCalledTimes(1)
 
     expect(mockUserRepository.findUserByEmail).not.toHaveBeenCalled()
     expect(mockUserRepository.createUser).not.toHaveBeenCalled()

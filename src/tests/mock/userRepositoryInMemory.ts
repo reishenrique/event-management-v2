@@ -10,7 +10,7 @@ export class UserRepositoryInMemory implements IUserRepository {
     this.users.push(newUser)
   }
 
-  async findUserByDocumentCpf(cpf: string) {
+  async findDocumentUserByCpf(cpf: string) {
     const user = this.users.find((user) => user.cpf === cpf)
     return user
   }
