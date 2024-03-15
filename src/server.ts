@@ -5,7 +5,7 @@ import 'dotenv/config'
 const port = process.env.PORT || 3000
 const stringConnection = process.env.DATABASE_CONNECTION as string
 
-const connectDatabase = async () => {
+export const connectDatabase = async () => {
   const mongooseConnection = await mongoose.connect(stringConnection)
   if (mongooseConnection) {
     app.listen(port, () => {
