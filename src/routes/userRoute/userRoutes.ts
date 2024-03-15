@@ -1,12 +1,18 @@
+import { UserRepository } from './../../application/repositories/userRepository'
 import { Router } from 'express'
 import UserController from '../../controllers/userController'
+import { CreateUserUseCase } from '../../domain/useCases/users/createUser.useCase'
 
 const userRoutes = Router()
 
-userRoutes.post('/user/createUser', new UserController().createUser)
-userRoutes.get('/user/getbycpf/:cpf', new UserController().getUserByCpf)
-userRoutes.get('/user/getbyid/:id', new UserController().getUserById)
-userRoutes.delete('/user/:id', new UserController().deleteUserById)
-userRoutes.put('/user/:id', new UserController().updateUserById)
+const userRepository = new UserRepository()
+const createUserUseCase = new CreateUserUseCase(userRepository)
+const userController = new UserController(createUserUseCase)
+
+userRoutes.post('/user/createUser', userController.createUser)
+userRoutes.get('/user/getbycpf/:cpf', userController.getUserByCpf)
+userRoutes.get('/user/getbyid/:id', userController.getUserById)
+userRoutes.delete('/user/:id', userController.deleteUserById)
+userRoutes.put('/user/:id', userController.updateUserById)
 
 export default userRoutes
