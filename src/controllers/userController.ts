@@ -1,9 +1,9 @@
 /* eslint-disable eqeqeq */
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import bcrypt from 'bcrypt'
 import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
+import { CreateUserUseCase } from '../domain/useCases/users/createUser.useCase'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -14,6 +14,10 @@ interface IUserController {
 }
 
 class UserController implements IUserController {
+  constructor(private createUserUseCase: CreateUserUseCase) {
+    this.createUserUseCase = createUserUseCase
+  }
+
   async createUser(req: Request, res: Response): Promise<object> {
     const userSchema = z.object({
       firstName: z.string({ required_error: 'Name is required' }).optional(),
@@ -49,45 +53,7 @@ class UserController implements IUserController {
 
     try {
       const user = userSchema.parse(req.body)
-      const { cpf, emailAddress } = user
-
-      const userExistsByCPF = await UserModel.findOne({ cpf })
-
-      if (userExistsByCPF) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('CPF already registered in the system')
-      }
-
-      const userExistsByEmail = await UserModel.findOne({ emailAddress })
-
-      if (userExistsByEmail) {
-        return res
-          .status(StatusCodes.BAD_REQUEST)
-          .send('E-mail already registered in the system')
-      }
-
-      const saltRounds = await bcrypt.genSalt(10)
-      const hashPassword = await bcrypt.hash(
-        user.password as string,
-        saltRounds,
-      )
-
-      const matchPassword = user.password !== user.confirmPassword
-
-      if (matchPassword) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-          statusCode: StatusCodes.BAD_REQUEST,
-          message: 'The passwords do not match',
-        })
-      }
-
-      const newUser = {
-        ...user,
-        password: hashPassword,
-      }
-
-      await UserModel.create(newUser)
+      const newUser = await this.createUserUseCase.execute(user)
 
       return res.status(StatusCodes.CREATED).json({
         statusCode: StatusCodes.CREATED,
