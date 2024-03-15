@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IUserRepository } from '../../interfaces/IUserRepository'
 import bcrypt from 'bcrypt'
 
