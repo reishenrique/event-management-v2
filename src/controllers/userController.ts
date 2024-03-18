@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
 import { CreateUserUseCase } from '../domain/useCases/users/createUser.useCase'
+import { GetUserByCpfUseCase } from '../domain/useCases/users/getUserByCpf.useCase'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -14,8 +15,12 @@ interface IUserController {
 }
 
 class UserController implements IUserController {
-  constructor(private createUserUseCase: CreateUserUseCase) {
+  constructor(
+    private createUserUseCase: CreateUserUseCase,
+    private getUserByCpfUseCase: GetUserByCpfUseCase,
+  ) {
     this.createUserUseCase = createUserUseCase
+    this.getUserByCpfUseCase = getUserByCpfUseCase
   }
 
   async createUser(req: Request, res: Response): Promise<object> {
@@ -71,23 +76,10 @@ class UserController implements IUserController {
   }
 
   async getUserByCpf(req: Request, res: Response): Promise<object> {
-    const { cpf } = req.params
-
-    if (!cpf) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'User ID is required to proceed with the search execution',
-      })
-    }
-
     try {
-      const getUserByCpf = await UserModel.findOne({ cpf })
+      const { cpf } = req.params
 
-      if (!getUserByCpf) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ message: 'User not found or registered' })
-      }
+      const getUserByCpf = await this.getUserByCpfUseCase.execute(cpf)
 
       return res
         .status(StatusCodes.OK)
