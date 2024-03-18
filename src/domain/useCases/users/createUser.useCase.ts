@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { UserEntity } from '../../entities/UserEntity'
 import { IUserRepository } from '../../interfaces/IUserRepository'
 import bcrypt from 'bcrypt'
 
@@ -7,7 +8,7 @@ export class CreateUserUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(user: any) {
+  async execute(user: UserEntity): Promise<UserEntity> {
     const { cpf, emailAddress }: { cpf: string; emailAddress: string } =
       user as any
 
