@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { UserEntity } from '../../domain/entities/UserEntity'
 import { IUserRepository } from '../../domain/interfaces/IUserRepository'
 import { UserModel } from '../../models/userModel'
 
 export class UserRepository implements IUserRepository {
-  async createUser(newUser: any): Promise<object> {
+  async createUser(newUser: UserEntity): Promise<UserEntity> {
     const user = await UserModel.create(newUser)
     return user
   }

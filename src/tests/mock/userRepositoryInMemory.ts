@@ -6,7 +6,7 @@ export class UserRepositoryInMemory implements IUserRepository {
     this.users = users ?? []
   }
 
-  async createUser(newUser: any): Promise<void> {
+  async createUser(newUser: object) {
     this.users.push(newUser)
   }
 
