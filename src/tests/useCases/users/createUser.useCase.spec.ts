@@ -25,7 +25,7 @@ describe('UserController', () => {
     jest.clearAllMocks()
   })
 
-  it('Should create a new user with success', async () => {
+  it('should return a new user successfully registered', async () => {
     const { sut, mockUserRepository } = makeSut()
     const user = {
       firstName: 'Henrique',
@@ -47,7 +47,7 @@ describe('UserController', () => {
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledTimes(1)
   })
 
-  it('Should create a new user with error', async () => {
+  it('should return the first exception of data already registered', async () => {
     const user = {
       firstName: 'Henrique',
       lastName: 'Test Jest',
