@@ -3,8 +3,9 @@ import { IUserRepository } from '../../domain/interfaces/IUserRepository'
 import { UserModel } from '../../models/userModel'
 
 export class UserRepository implements IUserRepository {
-  async createUser(newUser: any): Promise<void> {
-    await UserModel.create(newUser)
+  async createUser(newUser: any): Promise<object> {
+    const user = await UserModel.create(newUser)
+    return user
   }
 
   async findDocumentUserByCpf(cpf: string) {
