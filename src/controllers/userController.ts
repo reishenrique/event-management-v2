@@ -16,12 +16,9 @@ interface IUserController {
 
 class UserController implements IUserController {
   constructor(
-    private createUserUseCase: CreateUserUseCase,
-    private getUserByCpfUseCase: GetUserByCpfUseCase,
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly getUserByCpfUseCase: GetUserByCpfUseCase,
   ) {
-    this.createUserUseCase = createUserUseCase
-    this.getUserByCpfUseCase = getUserByCpfUseCase
-
     this.createUser = this.createUser.bind(this)
     this.getUserByCpf = this.getUserByCpf.bind(this)
   }
