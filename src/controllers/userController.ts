@@ -21,6 +21,9 @@ class UserController implements IUserController {
   ) {
     this.createUserUseCase = createUserUseCase
     this.getUserByCpfUseCase = getUserByCpfUseCase
+
+    this.createUser = this.createUser.bind(this)
+    this.getUserByCpf = this.getUserByCpf.bind(this)
   }
 
   async createUser(req: Request, res: Response): Promise<object> {
