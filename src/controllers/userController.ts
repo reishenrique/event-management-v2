@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
 import { CreateUserUseCase } from '../domain/useCases/users/createUser.useCase'
 import { GetUserByCpfUseCase } from '../domain/useCases/users/getUserByCpf.useCase'
+import { GetUserByIdUseCase } from '../domain/useCases/users/getUserById.useCase'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -18,9 +19,11 @@ class UserController implements IUserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUserByCpfUseCase: GetUserByCpfUseCase,
+    private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {
     this.createUser = this.createUser.bind(this)
     this.getUserByCpf = this.getUserByCpf.bind(this)
+    this.getUserById = this.getUserById.bind(this)
   }
 
   async createUser(req: Request, res: Response): Promise<object> {
@@ -99,28 +102,15 @@ class UserController implements IUserController {
   }
 
   async getUserById(req: Request, res: Response): Promise<object> {
-    const { id } = req.params
-
-    if (!id) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        statusCode: StatusCodes.NOT_FOUND,
-        message: 'User ID is required to proceed with the search execution',
-      })
-    }
-
     try {
-      const getUserById = await UserModel.findById(id)
+      const { id } = req.params
 
-      if (!getUserById) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'User ID not found or entered incorrectly',
-        })
-      }
+      const getUserById = await this.getUserByIdUseCase.execute(id)
 
-      return res
-        .status(StatusCodes.OK)
-        .json({ statusCode: StatusCodes.OK, user: getUserById })
+      return res.status(StatusCodes.OK).json({
+        statusCode: StatusCodes.OK,
+        user: getUserById,
+      })
     } catch (error) {
       console.log('Error while executing the user search endpoint by ID', error)
 
