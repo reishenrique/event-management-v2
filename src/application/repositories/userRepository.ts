@@ -18,4 +18,9 @@ export class UserRepository implements IUserRepository {
     const userExistsByEmail = await UserModel.findOne({ emailAddress: email })
     return userExistsByEmail
   }
+
+  async findUserById(id: string) {
+    const userExistsById = await UserModel.findOne({ _id: id })
+    return userExistsById
+  }
 }
