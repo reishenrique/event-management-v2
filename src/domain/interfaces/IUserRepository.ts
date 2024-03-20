@@ -5,4 +5,5 @@ export interface IUserRepository {
   createUser(newUser: UserEntity): any
   findDocumentUserByCpf(cpf: string): any
   findUserByEmail(email: string): any
+  findUserById(id: string): any
 }
