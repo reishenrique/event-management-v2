@@ -12,7 +12,7 @@ export class GetUserByCpfUseCase {
       )
     }
 
-    const getUserByCpf = await this.userRepository.findDocumentUserByCpf(cpf)
+    const getUserByCpf = await this.userRepository.findUserByCpf(cpf)
 
     if (!getUserByCpf) {
       throw new Error('User not found or registered')

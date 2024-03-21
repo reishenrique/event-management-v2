@@ -13,7 +13,7 @@ const makeSut = (
   const mockUserRepository = new UserRepositoryInMemory(users)
   const sut = new CreateUserUseCase(mockUserRepository)
 
-  jest.spyOn(mockUserRepository, 'findDocumentUserByCpf')
+  jest.spyOn(mockUserRepository, 'findUserByCpf')
   jest.spyOn(mockUserRepository, 'findUserByEmail')
   jest.spyOn(mockUserRepository, 'createUser')
 
@@ -25,7 +25,7 @@ describe('UserController', () => {
     jest.clearAllMocks()
   })
 
-  it('should return a new user successfully registered', async () => {
+  it('Should return a new user successfully registered', async () => {
     const { sut, mockUserRepository } = makeSut()
     const user = {
       firstName: 'Henrique',
@@ -43,11 +43,11 @@ describe('UserController', () => {
 
     expect(newUser.firstName).toBe(user.firstName)
 
-    expect(mockUserRepository.findDocumentUserByCpf).toHaveBeenCalledTimes(1)
+    expect(mockUserRepository.findUserByCpf).toHaveBeenCalledTimes(1)
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledTimes(1)
   })
 
-  it('should return the first exception of data already registered', async () => {
+  it('Should return the exception for cpf already registered in the system', async () => {
     const user = {
       firstName: 'Henrique',
       lastName: 'Test Jest',
@@ -66,7 +66,7 @@ describe('UserController', () => {
       new Error('CPF already registered in the system'),
     )
 
-    expect(mockUserRepository.findDocumentUserByCpf).toHaveBeenCalledTimes(1)
+    expect(mockUserRepository.findUserByCpf).toHaveBeenCalledTimes(1)
 
     expect(mockUserRepository.findUserByEmail).not.toHaveBeenCalled()
     expect(mockUserRepository.createUser).not.toHaveBeenCalled()

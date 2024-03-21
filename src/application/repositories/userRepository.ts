@@ -9,7 +9,7 @@ export class UserRepository implements IUserRepository {
     return user
   }
 
-  async findDocumentUserByCpf(cpf: string) {
+  async findUserByCpf(cpf: string) {
     const userExistsByCPF = await UserModel.findOne({ cpf })
     return userExistsByCPF
   }

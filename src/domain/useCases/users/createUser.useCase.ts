@@ -12,7 +12,7 @@ export class CreateUserUseCase {
     const { cpf, emailAddress }: { cpf: string; emailAddress: string } =
       user as any
 
-    const userExistsByCPF = await this.userRepository.findDocumentUserByCpf(cpf)
+    const userExistsByCPF = await this.userRepository.findUserByCpf(cpf)
 
     if (userExistsByCPF) {
       throw new Error('CPF already registered in the system')
