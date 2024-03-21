@@ -6,18 +6,24 @@ export class GetUserByCpfUseCase {
   }
 
   async execute(cpf: string) {
-    if (!cpf) {
-      throw new Error(
-        'User ID is required to proceed with the search execution',
-      )
+    try {
+      if (!cpf) {
+        throw new Error(
+          'User ID is required to proceed with the search execution',
+        )
+      }
+
+      const getUserByCpf = await this.userRepository.findUserByCpf(cpf)
+
+      if (!getUserByCpf) {
+        throw new Error('User not found or registered')
+      }
+
+      return getUserByCpf
+    } catch (error) {
+      console.log('Error in execute getUserByCpf use case:', error)
+
+      throw error
     }
-
-    const getUserByCpf = await this.userRepository.findUserByCpf(cpf)
-
-    if (!getUserByCpf) {
-      throw new Error('User not found or registered')
-    }
-
-    return getUserByCpf
   }
 }
