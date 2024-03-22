@@ -20,7 +20,15 @@ export class UserRepository implements IUserRepository {
   }
 
   async findUserById(id: string) {
-    const userExistsById = await UserModel.findOne({ _id: id })
+    const userExistsById = await UserModel.findById(id)
     return userExistsById
+  }
+
+  async findUserByIdAndUpdate(id: string, newData: any) {
+    const findUserAndUpdate = await UserModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    })
+
+    return findUserAndUpdate
   }
 }
