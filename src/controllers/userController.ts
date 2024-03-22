@@ -6,6 +6,7 @@ import { UserModel } from '../models/userModel'
 import { CreateUserUseCase } from '../domain/useCases/users/createUser.useCase'
 import { GetUserByCpfUseCase } from '../domain/useCases/users/getUserByCpf.useCase'
 import { GetUserByIdUseCase } from '../domain/useCases/users/getUserById.useCase'
+import UpdateUserByIdUseCase from '../domain/useCases/users/updateUserById.useCase'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -20,10 +21,12 @@ class UserController implements IUserController {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUserByCpfUseCase: GetUserByCpfUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
+    private readonly updateUserByIdUseCase: UpdateUserByIdUseCase,
   ) {
     this.createUser = this.createUser.bind(this)
     this.getUserByCpf = this.getUserByCpf.bind(this)
     this.getUserById = this.getUserById.bind(this)
+    this.updateUserById = this.updateUserById.bind(this)
   }
 
   async createUser(req: Request, res: Response): Promise<object> {
@@ -124,18 +127,16 @@ class UserController implements IUserController {
   async updateUserById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-      const dataUserUpdate = req.body
+      const newData = req.body
 
-      const user = await UserModel.findByIdAndUpdate(id, dataUserUpdate, {
-        new: true,
-      })
+      const user = await this.updateUserByIdUseCase.execute(id, newData)
 
-      if (!user) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'User not found for update',
-        })
-      }
+      // if (!user) {
+      //   return res.status(StatusCodes.NOT_FOUND).json({
+      //     statusCode: StatusCodes.NOT_FOUND,
+      //     message: 'User not found for update',
+      //   })
+      // }
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
