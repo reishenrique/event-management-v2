@@ -6,4 +6,5 @@ export interface IUserRepository {
   findUserByCpf(cpf: string): any
   findUserByEmail(email: string): any
   findUserById(id: string): any
+  findUserByIdAndUpdate(id: string, newData: any): any
 }
