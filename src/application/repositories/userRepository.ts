@@ -31,4 +31,9 @@ export class UserRepository implements IUserRepository {
 
     return findUserAndUpdate
   }
+
+  async deleteUserById(id: string) {
+    const findUserByIdAndDelete = await UserModel.deleteOne({ _id: id })
+    return findUserByIdAndDelete
+  }
 }

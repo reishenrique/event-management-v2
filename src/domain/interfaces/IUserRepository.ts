@@ -7,4 +7,5 @@ export interface IUserRepository {
   findUserByEmail(email: string): any
   findUserById(id: string): any
   findUserByIdAndUpdate(id: string, newData: any): any
+  deleteUserById(id: string): any
 }
