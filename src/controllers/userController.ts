@@ -2,11 +2,11 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
-import { UserModel } from '../models/userModel'
 import { CreateUserUseCase } from '../domain/useCases/users/createUser.useCase'
 import { GetUserByCpfUseCase } from '../domain/useCases/users/getUserByCpf.useCase'
 import { GetUserByIdUseCase } from '../domain/useCases/users/getUserById.useCase'
-import UpdateUserByIdUseCase from '../domain/useCases/users/updateUserById.useCase'
+import { UpdateUserByIdUseCase } from '../domain/useCases/users/updateUserById.useCase'
+import { DeleteUserByIdUseCase } from '../domain/useCases/users/deleteUserById.useCase'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -22,11 +22,13 @@ class UserController implements IUserController {
     private readonly getUserByCpfUseCase: GetUserByCpfUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly updateUserByIdUseCase: UpdateUserByIdUseCase,
+    private readonly deleteUserByIdUseCase: DeleteUserByIdUseCase,
   ) {
     this.createUser = this.createUser.bind(this)
     this.getUserByCpf = this.getUserByCpf.bind(this)
     this.getUserById = this.getUserById.bind(this)
     this.updateUserById = this.updateUserById.bind(this)
+    this.deleteUserById = this.deleteUserById.bind(this)
   }
 
   async createUser(req: Request, res: Response): Promise<object> {
@@ -131,13 +133,6 @@ class UserController implements IUserController {
 
       const user = await this.updateUserByIdUseCase.execute(id, newData)
 
-      // if (!user) {
-      //   return res.status(StatusCodes.NOT_FOUND).json({
-      //     statusCode: StatusCodes.NOT_FOUND,
-      //     message: 'User not found for update',
-      //   })
-      // }
-
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
         message: 'User data successfully updated',
@@ -158,19 +153,10 @@ class UserController implements IUserController {
   }
 
   async deleteUserById(req: Request, res: Response): Promise<object> {
-    const { id } = req.params
-
     try {
-      const getUserById = await UserModel.findOne({ _id: id })
+      const { id } = req.params
+      await this.deleteUserByIdUseCase.execute(id)
 
-      if (!getUserById) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'User not found or registered',
-        })
-      }
-
-      await UserModel.deleteOne({ _id: id })
       return res
         .status(StatusCodes.OK)
         .json({ message: 'User deleted successfully' })
