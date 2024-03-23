@@ -1,6 +1,6 @@
 import { IUserRepository } from '../../interfaces/IUserRepository'
 
-export default class UpdateUserByIdUseCase {
+export class UpdateUserByIdUseCase {
   constructor(private userRepository: IUserRepository) {
     this.userRepository = userRepository
   }
