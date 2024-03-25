@@ -4,6 +4,7 @@ import { EventModel } from '../models/eventModel'
 import { StatusCodes } from 'http-status-codes'
 import { eventTypeEnum } from '../enum/eventTypeEnum'
 import { paymentMethodEnum } from '../enum/paymentMethodEnum'
+import { CreateEventUseCase } from '../domain/useCases/events/createEvent.useCase'
 
 interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
@@ -13,6 +14,10 @@ interface IEventController {
   deleteEventById(req: Request, res: Response): Promise<object>
 }
 export class EventController implements IEventController {
+  constructor(private readonly createEventUseCase: CreateEventUseCase) {
+    this.createEvent = this.createEvent.bind(this)
+  }
+
   async createEvent(req: Request, res: Response): Promise<object> {
     const eventSchema = z.object({
       eventName: z
@@ -43,7 +48,7 @@ export class EventController implements IEventController {
         )
         .optional(),
       eventTicketPrice: z
-        .string({
+        .number({
           required_error: 'The event ticket price is required',
         })
         .optional(),
@@ -70,42 +75,21 @@ export class EventController implements IEventController {
         .optional(),
     })
 
-    const event = eventSchema.parse(req.body)
-    const { eventName, cnpj } = event
-
     try {
-      const eventExistsByEventName = await EventModel.findOne({ eventName })
+      const event = eventSchema.parse(req.body)
+      const newEvent = await this.createEventUseCase.execute(event)
 
-      if (eventExistsByEventName) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-          statusCode: StatusCodes.BAD_REQUEST,
-          message: 'Event already registered in the system',
-        })
-      }
-
-      const eventExistsByCNPJ = await EventModel.findOne({ cnpj })
-
-      if (eventExistsByCNPJ) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-          statusCode: StatusCodes.BAD_REQUEST,
-          message: 'The CNPJ for event registration is already in use',
-        })
-      }
-
-      const newEvent = event
-
-      await EventModel.create(newEvent)
       return res.status(StatusCodes.CREATED).json({
         statusCode: StatusCodes.CREATED,
         message: 'Event successfully registered',
         event: newEvent,
       })
     } catch (error) {
-      console.log('Error when trying to create an event', error)
+      console.log('Error while executing the event creation endpoint', error)
 
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error when trying to create an event',
+        message: 'Error while executing the event creation endpoint',
       })
     }
   }
