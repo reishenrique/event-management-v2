@@ -18,4 +18,9 @@ export class EventRepository implements IEventRepository {
     const eventExistsByCnpj = await EventModel.findOne({ cnpj })
     return eventExistsByCnpj
   }
+
+  async findEventById(id: string): Promise<any> {
+    const eventExistsById = await EventModel.findById(id)
+    return eventExistsById
+  }
 }

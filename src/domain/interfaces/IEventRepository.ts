@@ -5,4 +5,5 @@ export interface IEventRepository {
   createEvent(newEvent: EventEntity): any
   findEventByName(eventName: string): any
   findEventByCnpj(cnpj: string): any
+  findEventById(id: string): any
 }
