@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { z } from 'zod'
-import { EventModel } from '../models/eventModel'
 import { StatusCodes } from 'http-status-codes'
 import { eventTypeEnum } from '../enum/eventTypeEnum'
 import { paymentMethodEnum } from '../enum/paymentMethodEnum'
