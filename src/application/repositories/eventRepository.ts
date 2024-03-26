@@ -23,4 +23,21 @@ export class EventRepository implements IEventRepository {
     const eventExistsById = await EventModel.findById(id)
     return eventExistsById
   }
+
+  async findEventByIdAndUpdate(id: string, newEventData: any) {
+    const findEventAndUpdate = await EventModel.findByIdAndUpdate(
+      id,
+      newEventData,
+      {
+        new: true,
+      },
+    )
+
+    return findEventAndUpdate
+  }
+
+  async deleteEventById(id: string) {
+    const findUserByIdAndDelete = await EventModel.deleteOne({ _id: id })
+    return findUserByIdAndDelete
+  }
 }
