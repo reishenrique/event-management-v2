@@ -5,14 +5,14 @@ export class UpdateUserByIdUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(id: string, dataUserUpdate: string) {
+  async execute(id: string, newUserData: string) {
     if (!id) {
       throw new Error('User ID is required to proceed with update execution')
     }
 
     const findUserAndUpdate = await this.userRepository.findUserByIdAndUpdate(
       id,
-      dataUserUpdate,
+      newUserData,
     )
 
     if (!findUserAndUpdate) {

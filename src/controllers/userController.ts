@@ -129,9 +129,9 @@ class UserController implements IUserController {
   async updateUserById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-      const newData = req.body
+      const newUserData = req.body
 
-      const user = await this.updateUserByIdUseCase.execute(id, newData)
+      const user = await this.updateUserByIdUseCase.execute(id, newUserData)
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,

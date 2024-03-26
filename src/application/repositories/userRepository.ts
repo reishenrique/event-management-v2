@@ -24,10 +24,14 @@ export class UserRepository implements IUserRepository {
     return userExistsById
   }
 
-  async findUserByIdAndUpdate(id: string, newData: any) {
-    const findUserAndUpdate = await UserModel.findByIdAndUpdate(id, newData, {
-      new: true,
-    })
+  async findUserByIdAndUpdate(id: string, newUserData: any) {
+    const findUserAndUpdate = await UserModel.findByIdAndUpdate(
+      id,
+      newUserData,
+      {
+        new: true,
+      },
+    )
 
     return findUserAndUpdate
   }
