@@ -5,17 +5,31 @@ import { StatusCodes } from 'http-status-codes'
 import { eventTypeEnum } from '../enum/eventTypeEnum'
 import { paymentMethodEnum } from '../enum/paymentMethodEnum'
 import { CreateEventUseCase } from '../domain/useCases/events/createEvent.useCase'
+import { GetEventByIdUseCase } from '../domain/useCases/events/getEventById.useCase'
+import { GetEventByCnpjUseCase } from '../domain/useCases/events/getEventByCnpj.useCase'
+import { UpdateEventByIdUseCase } from '../domain/useCases/events/updateEventById.useCase'
+import { DeleteEventByIdUseCase } from '../domain/useCases/events/deleteEventById.useCase'
 
 interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
-  getEventByCnpj(req: Request, res: Response): Promise<object>
   getEventById(req: Request, res: Response): Promise<object>
+  getEventByCnpj(req: Request, res: Response): Promise<object>
   updateEventById(req: Request, res: Response): Promise<object>
   deleteEventById(req: Request, res: Response): Promise<object>
 }
 export class EventController implements IEventController {
-  constructor(private readonly createEventUseCase: CreateEventUseCase) {
+  constructor(
+    private readonly createEventUseCase: CreateEventUseCase,
+    private readonly getEventByIdUseCase: GetEventByIdUseCase,
+    private readonly getEventByCnpjUseCase: GetEventByCnpjUseCase,
+    private readonly updateEventByIdUseCase: UpdateEventByIdUseCase,
+    private readonly deleteEventByIdUseCase: DeleteEventByIdUseCase,
+  ) {
     this.createEvent = this.createEvent.bind(this)
+    this.getEventById = this.getEventById.bind(this)
+    this.getEventByCnpj = this.getEventByCnpj.bind(this)
+    this.updateEventById = this.updateEventById.bind(this)
+    this.deleteEventById = this.deleteEventById.bind(this)
   }
 
   async createEvent(req: Request, res: Response): Promise<object> {
@@ -95,24 +109,9 @@ export class EventController implements IEventController {
   }
 
   async getEventById(req: Request, res: Response): Promise<object> {
-    const { id } = req.params
-
-    if (!id) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Event ID is required to proceed with the search execution',
-      })
-    }
-
     try {
-      const getEventById = await EventModel.findById(id)
-
-      if (!getEventById) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'Event ID not found',
-        })
-      }
+      const { id } = req.params
+      const getEventById = await this.getEventByIdUseCase.execute(id)
 
       return res
         .status(StatusCodes.OK)
@@ -132,38 +131,23 @@ export class EventController implements IEventController {
   }
 
   async getEventByCnpj(req: Request, res: Response): Promise<object> {
-    const { cnpj } = req.params
-
-    if (!cnpj) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        statusCode: StatusCodes.BAD_REQUEST,
-        message: 'Event CNPJ is required to proceed with the search execution',
-      })
-    }
-
     try {
-      const getEventByCnpj = await EventModel.findOne({ cnpj })
-
-      if (!getEventByCnpj) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'User not found or registered',
-        })
-      }
+      const { cnpj } = req.params
+      const getEventByCnpj = await this.getEventByCnpjUseCase.execute(cnpj)
 
       return res
         .status(StatusCodes.OK)
         .json({ statusCode: StatusCodes.OK, user: getEventByCnpj })
     } catch (error) {
       console.log(
-        'Error while executing the endpoint to search for a user by CNPJ',
+        'Error while executing the endpoint to search for a event by CNPJ',
         error,
       )
 
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
         message:
-          'Error while executing the endpoint to search for a user by CNPJ',
+          'Error while executing the endpoint to search for a event by CNPJ',
       })
     }
   }
@@ -171,26 +155,17 @@ export class EventController implements IEventController {
   async updateEventById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-      const dataEventUpdate = req.body
+      const newEventData = req.body
 
-      const getEventToUpate = await EventModel.findByIdAndUpdate(
+      const updatedEvent = await this.updateEventByIdUseCase.execute(
         id,
-        dataEventUpdate,
-        {
-          new: true,
-        },
+        newEventData,
       )
-
-      if (!getEventToUpate) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .send('Event not found to perform data update')
-      }
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
         message: 'Event data successfully updated',
-        updatedEvent: getEventToUpate,
+        updatedEvent,
       })
     } catch (error) {
       console.log(
@@ -208,17 +183,7 @@ export class EventController implements IEventController {
   async deleteEventById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-
-      const getEventById = await EventModel.findOne({ _id: id })
-
-      if (!getEventById) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          message: 'Event not found',
-        })
-      }
-
-      await EventModel.deleteOne({ _id: id })
+      await this.deleteEventByIdUseCase.execute(id)
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
