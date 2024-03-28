@@ -1,3 +1,4 @@
+import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
 
 export class GetUserByCpfUseCase {
@@ -7,7 +8,7 @@ export class GetUserByCpfUseCase {
 
   async execute(cpf: string) {
     if (!cpf) {
-      throw new Error(
+      throw CustomError.BadRequestError(
         'User ID is required to proceed with the search execution',
       )
     }
@@ -15,7 +16,7 @@ export class GetUserByCpfUseCase {
     const getUserByCpf = await this.userRepository.findUserByCpf(cpf)
 
     if (!getUserByCpf) {
-      throw new Error('User not found or registered')
+      throw CustomError.NotFoundError('User not found or registered')
     }
 
     return getUserByCpf

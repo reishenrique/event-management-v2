@@ -1,3 +1,4 @@
+import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
 
 export class UpdateUserByIdUseCase {
@@ -7,7 +8,9 @@ export class UpdateUserByIdUseCase {
 
   async execute(id: string, newUserData: string) {
     if (!id) {
-      throw new Error('User ID is required to proceed with update execution')
+      throw CustomError.BadRequestError(
+        'User ID is required to proceed with update execution',
+      )
     }
 
     const findUserAndUpdate = await this.userRepository.findUserByIdAndUpdate(
@@ -16,7 +19,7 @@ export class UpdateUserByIdUseCase {
     )
 
     if (!findUserAndUpdate) {
-      throw new Error('User not found for update')
+      throw CustomError.NotFoundError('User not found for update')
     }
 
     return findUserAndUpdate

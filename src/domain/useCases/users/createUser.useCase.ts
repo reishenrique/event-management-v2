@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserEntity } from '../../entities/UserEntity'
+import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
 import bcrypt from 'bcrypt'
 
@@ -15,14 +16,14 @@ export class CreateUserUseCase {
     const userExistsByCPF = await this.userRepository.findUserByCpf(cpf)
 
     if (userExistsByCPF) {
-      throw new Error('CPF already registered in the system')
+      throw CustomError.ConflictError('CPF already registered in the system')
     }
 
     const userExistsByEmail =
       await this.userRepository.findUserByEmail(emailAddress)
 
     if (userExistsByEmail) {
-      throw new Error('E-mail already registered in the system')
+      throw CustomError.ConflictError('E-mail already registered in the system')
     }
 
     const saltRounds = await bcrypt.genSalt(10)
@@ -31,7 +32,7 @@ export class CreateUserUseCase {
     const matchPassword = user.password !== user.confirmPassword
 
     if (matchPassword) {
-      throw new Error('The passwords do not match')
+      throw CustomError.BadRequestError('The passwords do not match')
     }
 
     const newUser = {

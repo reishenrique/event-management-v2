@@ -1,3 +1,4 @@
+import { CustomError } from '../../errors/customError'
 import { IUserRepository } from './../../interfaces/IUserRepository'
 
 export class DeleteUserByIdUseCase {
@@ -9,7 +10,7 @@ export class DeleteUserByIdUseCase {
     const getUserById = await this.userRepository.findUserById(id)
 
     if (!getUserById) {
-      throw new Error('User not found or registered')
+      throw CustomError.NotFoundError('User not found or registered')
     }
 
     await this.userRepository.deleteUserById(id)
