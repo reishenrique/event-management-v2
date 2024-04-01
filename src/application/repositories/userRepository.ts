@@ -14,8 +14,8 @@ export class UserRepository implements IUserRepository {
     return userExistsByCPF
   }
 
-  async findUserByEmail(email: string) {
-    const userExistsByEmail = await UserModel.findOne({ emailAddress: email })
+  async findUserByEmail(emailAddress: string) {
+    const userExistsByEmail = await UserModel.findOne({ emailAddress })
     return userExistsByEmail
   }
 
