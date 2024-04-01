@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Request, Response } from 'express'
-import { StatusCodes, getReasonPhrase } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
