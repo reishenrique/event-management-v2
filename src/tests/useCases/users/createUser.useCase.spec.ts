@@ -48,7 +48,7 @@ describe('UserController', () => {
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledTimes(1)
   })
 
-  it('Should throw exception for cpf already registered in the system', async () => {
+  it('Should throw exception when cpf already registered in the system', async () => {
     const user = {
       firstName: 'Henrique',
       lastName: 'Test Jest',
@@ -73,7 +73,7 @@ describe('UserController', () => {
     expect(mockUserRepository.createUser).not.toHaveBeenCalled()
   })
 
-  it('Should throw exception for e-mail already registered in the system', async () => {
+  it('Should throw exception when e-mail already registered in the system', async () => {
     const user = {
       firstName: 'Henrique',
       lastName: 'Test Jest',
