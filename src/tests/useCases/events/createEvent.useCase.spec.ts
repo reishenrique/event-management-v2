@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { CustomError } from '../../../domain/errors/customError'
 import { IEventRepository } from '../../../domain/interfaces/IEventRepository'
 import { CreateEventUseCase } from '../../../domain/useCases/events/createEvent.useCase'
 import { EventRepositoryInMemory } from '../../mock/eventRepositoryInMemory'
@@ -47,5 +48,30 @@ describe('EventController', () => {
     expect(mockEventRepository.findEventByName).toHaveBeenCalledTimes(1)
     expect(mockEventRepository.findEventByCnpj).toHaveBeenCalledTimes(1)
     expect(mockEventRepository.createEvent).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should throw exception for when event name already registered in the system', async () => {
+    const event = {
+      eventName: 'Event Test',
+      eventDescription: 'Event Test Description',
+      cnpj: '11122233344455',
+      location: 'São Paulo',
+      eventType: 'Academic and Educational Event',
+      eventTicketPrice: 1000,
+      venueCapacity: 1000,
+      contactInformation: 'Teste Contact information',
+      paymentMethodOption: 'Credit',
+    }
+
+    const { sut, mockEventRepository } = makeSut([event])
+
+    expect(sut.execute(event)).rejects.toThrow(
+      CustomError.ConflictError('Event already registered in the system'),
+    )
+
+    expect(mockEventRepository.findEventByName).toHaveBeenCalledTimes(1)
+
+    expect(mockEventRepository.findEventByCnpj).not.toHaveBeenCalledTimes(1)
+    expect(mockEventRepository.createEvent).not.toHaveBeenCalledTimes(1)
   })
 })
