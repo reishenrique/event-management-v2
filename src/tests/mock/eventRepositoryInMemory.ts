@@ -4,7 +4,7 @@ import { IEventRepository } from '../../domain/interfaces/IEventRepository'
 export class EventRepositoryInMemory implements IEventRepository {
   private events: any[] = []
   constructor(events: any) {
-    this.events = events
+    this.events = events ?? []
   }
 
   async createEvent(newEvent: EventEntity) {
@@ -12,7 +12,7 @@ export class EventRepositoryInMemory implements IEventRepository {
   }
 
   async findEventByName(eventName: string) {
-    const event = this.events.find((event) => event.name === eventName)
+    const event = this.events.find((event) => event.eventName === eventName)
     return event
   }
 
