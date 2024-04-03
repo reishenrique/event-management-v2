@@ -1,4 +1,5 @@
 import { EventEntity } from '../../entities/EventEntity'
+import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
 
 export class GetEventByIdUseCase {
@@ -8,7 +9,7 @@ export class GetEventByIdUseCase {
 
   async execute(id: string): Promise<EventEntity> {
     if (!id) {
-      throw new Error(
+      throw CustomError.BadRequestError(
         'Event ID is required to proceed with the search execution',
       )
     }
@@ -16,7 +17,7 @@ export class GetEventByIdUseCase {
     const getEventById = await this.eventRepository.findEventById(id)
 
     if (!getEventById) {
-      throw new Error('Event ID not found')
+      throw CustomError.NotFoundError('Event ID not found')
     }
 
     return getEventById

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEntity } from '../../entities/EventEntity'
+import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
 
 export class CreateEventUseCase {
@@ -15,13 +16,15 @@ export class CreateEventUseCase {
       await this.eventRepository.findEventByName(eventName)
 
     if (eventExistsByEventName) {
-      throw new Error('Event already registered in the system')
+      throw CustomError.ConflictError('Event already registered in the system')
     }
 
     const eventExistsByCNPJ = await this.eventRepository.findEventByCnpj(cnpj)
 
     if (eventExistsByCNPJ) {
-      throw new Error('The CNPJ for event registration is already in use')
+      throw CustomError.ConflictError(
+        'The CNPJ for event registration is already in use',
+      )
     }
 
     const newEvent = event

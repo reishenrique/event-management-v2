@@ -1,3 +1,4 @@
+import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
 
 export class DeleteEventByIdUseCase {
@@ -9,7 +10,7 @@ export class DeleteEventByIdUseCase {
     const getEventById = await this.eventRepository.findEventById(id)
 
     if (!getEventById) {
-      throw new Error('Event not found')
+      throw CustomError.NotFoundError('Event not found')
     }
 
     await this.eventRepository.deleteEventById(id)

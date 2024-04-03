@@ -1,4 +1,5 @@
 import { UserEntity } from '../../entities/UserEntity'
+import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
 
 export class GetEventByCnpjUseCase {
@@ -8,7 +9,7 @@ export class GetEventByCnpjUseCase {
 
   async execute(cnpj: string): Promise<UserEntity> {
     if (!cnpj) {
-      throw new Error(
+      throw CustomError.BadRequestError(
         'Event CNPJ is required to proceed with the search execution',
       )
     }
@@ -16,7 +17,7 @@ export class GetEventByCnpjUseCase {
     const getEventByCnpj = await this.eventRepository.findEventByCnpj(cnpj)
 
     if (!getEventByCnpj) {
-      throw new Error('Event not found or registered')
+      throw CustomError.NotFoundError('Event not found or registered')
     }
 
     return getEventByCnpj
