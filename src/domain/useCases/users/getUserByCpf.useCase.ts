@@ -6,8 +6,8 @@ export class GetUserByCpfUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(cpf: string) {
-    if (!cpf) {
+  async execute(cpf?: string) {
+    if (!cpf || typeof cpf !== 'string') {
       throw CustomError.BadRequestError(
         'User ID is required to proceed with the search execution',
       )
