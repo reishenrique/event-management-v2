@@ -1,5 +1,4 @@
 import { UserEntity } from '../../domain/entities/UserEntity'
-import { CustomError } from '../../domain/errors/customError'
 import { IUserRepository } from '../../domain/interfaces/IUserRepository'
 
 export class UserRepositoryInMemory implements IUserRepository {
@@ -19,10 +18,7 @@ export class UserRepositoryInMemory implements IUserRepository {
 
   async findUserByEmail(emailAddress: string) {
     const user = this.users.find((user) => user.emailAddress === emailAddress)
-
-    if (user) {
-      throw CustomError.ConflictError('E-mail already registered in the system')
-    }
+    return user
   }
 
   async findUserById(id: string) {

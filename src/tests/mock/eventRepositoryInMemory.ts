@@ -1,4 +1,5 @@
 import { EventEntity } from '../../domain/entities/EventEntity'
+import { CustomError } from '../../domain/errors/customError'
 import { IEventRepository } from '../../domain/interfaces/IEventRepository'
 
 export class EventRepositoryInMemory implements IEventRepository {
