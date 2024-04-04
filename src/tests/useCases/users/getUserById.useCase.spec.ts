@@ -42,4 +42,28 @@ describe('Get user by id', () => {
 
     expect(mockUserRepository.findUserById).toHaveBeenCalledTimes(1)
   })
+
+  it('Should throw an exception when the user id is not provided', async () => {
+    const mockUser = {
+      _id: '65ff47ddd240477491b399bf',
+      firstName: 'John',
+      lastName: 'Doe',
+      cpf: '12345678901',
+      password: 'genericpassword',
+      emailAddress: 'johndoe@example.com',
+      userName: 'john.doe',
+      phoneNumber: '+1234567890',
+      gender: 'Male',
+    }
+
+    const { sut, mockUserRepository } = makeSut([mockUser])
+
+    await expect(sut.execute(undefined)).rejects.toThrow(
+      CustomError.BadRequestError(
+        'User ID is required to proceed with the search execution',
+      ),
+    )
+
+    expect(mockUserRepository.findUserById).not.toHaveBeenCalledTimes(1)
+  })
 })
