@@ -6,8 +6,8 @@ export class GetUserByIdUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(id: string) {
-    if (!id) {
+  async execute(id?: string) {
+    if (!id || typeof id !== 'string') {
       throw CustomError.BadRequestError(
         'User ID is required to proceed with the search execution',
       )
