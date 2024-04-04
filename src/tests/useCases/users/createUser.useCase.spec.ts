@@ -21,7 +21,7 @@ const makeSut = (
   return { sut, mockUserRepository }
 }
 
-describe('UserController', () => {
+describe('Create user use case', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
   })
