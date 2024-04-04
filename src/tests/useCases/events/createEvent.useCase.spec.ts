@@ -50,7 +50,7 @@ describe('EventController', () => {
     expect(mockEventRepository.createEvent).toHaveBeenCalledTimes(1)
   })
 
-  it('Should throw exception for when event name already registered in the system', async () => {
+  it('Should throw exception when event name already registered in the system', async () => {
     const event = {
       eventName: 'Event Test',
       eventDescription: 'Event Test Description',
@@ -73,5 +73,46 @@ describe('EventController', () => {
 
     expect(mockEventRepository.findEventByCnpj).not.toHaveBeenCalledTimes(1)
     expect(mockEventRepository.createEvent).not.toHaveBeenCalledTimes(1)
+  })
+
+  it('Should throw exception when cnpj already registered in the system', async () => {
+    const event = {
+      eventName: 'Event Test',
+      eventDescription: 'Event Test Description',
+      cnpj: '11122233344455',
+      location: 'São Paulo',
+      eventType: 'Academic and Educational Event',
+      eventTicketPrice: 1000,
+      venueCapacity: 1000,
+      contactInformation: 'Teste Contact information',
+      paymentMethodOption: 'Credit',
+    }
+
+    const { sut, mockEventRepository } = makeSut([event])
+
+    const event2 = {
+      eventName: 'Event Test 2',
+      eventDescription: 'Event Test Description',
+      cnpj: '11122233344455',
+      location: 'São Paulo',
+      eventType: 'Academic and Educational Event',
+      eventTicketPrice: 1000,
+      venueCapacity: 1000,
+      contactInformation: 'Teste Contact information',
+      paymentMethodOption: 'Credit',
+    }
+
+    const promise = sut.execute(event2)
+
+    await expect(promise).rejects.toThrow(
+      CustomError.ConflictError(
+        'The CNPJ for event registration is already in use',
+      ),
+    )
+
+    expect(mockEventRepository.findEventByName).toHaveBeenCalledTimes(1)
+    expect(mockEventRepository.findEventByCnpj).toHaveBeenCalledTimes(1)
+
+    expect(mockEventRepository.createEvent).not.toHaveBeenCalled()
   })
 })
