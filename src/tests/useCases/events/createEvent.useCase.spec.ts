@@ -21,7 +21,7 @@ const makeSut = (
   return { sut, mockEventRepository }
 }
 
-describe('EventController', () => {
+describe('Create event use case', () => {
   beforeEach(async () => {
     jest.clearAllMocks()
   })
