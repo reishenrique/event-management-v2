@@ -7,8 +7,8 @@ export class GetEventByCnpjUseCase {
     this.eventRepository = eventRepository
   }
 
-  async execute(cnpj: string): Promise<UserEntity> {
-    if (!cnpj) {
+  async execute(cnpj?: string): Promise<UserEntity> {
+    if (!cnpj || typeof cnpj !== 'string') {
       throw CustomError.BadRequestError(
         'Event CNPJ is required to proceed with the search execution',
       )
