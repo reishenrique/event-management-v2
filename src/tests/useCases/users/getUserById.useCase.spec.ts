@@ -64,6 +64,32 @@ describe('Get user by id', () => {
       ),
     )
 
-    expect(mockUserRepository.findUserById).not.toHaveBeenCalledTimes(1)
+    expect(mockUserRepository.findUserById).not.toHaveBeenCalled()
+  })
+
+  it('Should throw an exception when the user is not found by the provided ID', async () => {
+    const mockUser = {
+      _id: '65ff47ddd240477491b399bf',
+      firstName: 'John',
+      lastName: 'Doe',
+      cpf: '12345678901',
+      password: 'genericpassword',
+      emailAddress: 'johndoe@example.com',
+      userName: 'john.doe',
+      phoneNumber: '+1234567890',
+      gender: 'Male',
+    }
+
+    const { sut, mockUserRepository } = makeSut([mockUser])
+
+    const id = '65ff47ddd240477491b399b'
+
+    const user = sut.execute(id)
+
+    await expect(user).rejects.toThrow(
+      CustomError.NotFoundError('User not found or registered'),
+    )
+
+    expect(mockUserRepository.findUserById).toHaveBeenCalledTimes(1)
   })
 })
