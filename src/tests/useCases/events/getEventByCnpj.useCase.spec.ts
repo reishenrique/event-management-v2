@@ -68,4 +68,31 @@ describe('Get event by cnpj', () => {
 
     expect(mockEventRepository.findEventByCnpj).not.toHaveBeenCalled()
   })
+
+  it('Should throw an exception when the event is not found by the provided cnpj', async () => {
+    const mockEvent = {
+      _id: '6602d505cfa1f38f545a4542',
+      eventName: 'Mock Event',
+      eventDescription: 'Mock Event',
+      cnpj: '12345678901220',
+      location: 'São Paulo',
+      eventType: 'Social Event',
+      eventTicketPrice: 1000,
+      venueCapacity: 1000,
+      contactInformation: 'Test mock event',
+      paymentMethod: 'Credit',
+    }
+
+    const { sut, mockEventRepository } = makeSut([mockEvent])
+
+    const cnpj = '1234567890122'
+
+    const event = sut.execute(cnpj)
+
+    await expect(event).rejects.toThrow(
+      CustomError.NotFoundError('Event not found or registered'),
+    )
+
+    expect(mockEventRepository.findEventByCnpj).toHaveBeenCalledTimes(1)
+  })
 })
