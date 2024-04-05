@@ -66,4 +66,30 @@ describe('Get user use case', () => {
 
     expect(mockUserRepository.findUserByCpf).not.toHaveBeenCalled()
   })
+
+  it('Should throw an exception when the user is not found by the provided cpf', async () => {
+    const mockUser = {
+      _id: '65ff47ddd240477491b399bf',
+      firstName: 'John',
+      lastName: 'Doe',
+      cpf: '12345678901',
+      password: 'genericpassword',
+      emailAddress: 'johndoe@example.com',
+      userName: 'john.doe',
+      phoneNumber: '+1234567890',
+      gender: 'Male',
+    }
+
+    const { sut, mockUserRepository } = makeSut([mockUser])
+
+    const cpf = '1234567890'
+
+    const user = sut.execute(cpf)
+
+    await expect(user).rejects.toThrow(
+      CustomError.NotFoundError('User not found or registered'),
+    )
+
+    expect(mockUserRepository.findUserByCpf).toHaveBeenCalledTimes(1)
+  })
 })
