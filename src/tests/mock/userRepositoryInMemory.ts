@@ -1,4 +1,3 @@
-import { UserEntity } from '../../domain/entities/UserEntity'
 import { IUserRepository } from '../../domain/interfaces/IUserRepository'
 
 export class UserRepositoryInMemory implements IUserRepository {
@@ -26,7 +25,7 @@ export class UserRepositoryInMemory implements IUserRepository {
     return user
   }
 
-  async findUserByIdAndUpdate(id: string, newUserData: any) {
+  async findUserByIdAndUpdate(id: string, newUserData: object) {
     const userIndex = this.users.findIndex((user) => user._id === id)
     if (userIndex !== -1) {
       this.users[userIndex] = { ...this.users[userIndex], ...newUserData }

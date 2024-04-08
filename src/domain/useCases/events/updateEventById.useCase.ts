@@ -6,15 +6,15 @@ export class UpdateEventByIdUseCase {
     this.eventRepository = eventRepository
   }
 
-  async execute(id: string, newDataEvent: string) {
-    if (!id) {
+  async execute(id?: string, newEventData?: object) {
+    if (!id || typeof id !== 'string') {
       throw CustomError.BadRequestError(
         'Event ID is required to proceed with update execution',
       )
     }
 
     const findEventAndUpdate =
-      await this.eventRepository.findEventByIdAndUpdate(id, newDataEvent)
+      await this.eventRepository.findEventByIdAndUpdate(id, newEventData)
 
     if (!findEventAndUpdate) {
       throw CustomError.NotFoundError('Event not found to perform data update')

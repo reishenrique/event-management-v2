@@ -1,5 +1,4 @@
 import { EventEntity } from '../../domain/entities/EventEntity'
-import { CustomError } from '../../domain/errors/customError'
 import { IEventRepository } from '../../domain/interfaces/IEventRepository'
 
 export class EventRepositoryInMemory implements IEventRepository {
@@ -27,14 +26,14 @@ export class EventRepositoryInMemory implements IEventRepository {
     return event
   }
 
-  async findEventByIdAndUpdate(id: string, newEventData: any) {
-    const index = this.events.findIndex((events) => events._id === id)
-    if (index === -1) {
-      return null
+  async findEventByIdAndUpdate(id: string, newEventData: object) {
+    const eventIndex = this.events.findIndex((event) => event._id === id)
+    if (eventIndex !== -1) {
+      this.events[eventIndex] = { ...this.events[eventIndex], ...newEventData }
+      return this.events[eventIndex]
     }
 
-    this.events[index] = { ...this.events[index], ...newEventData }
-    return this.events[index]
+    return null
   }
 
   async deleteEventById(id: string) {
