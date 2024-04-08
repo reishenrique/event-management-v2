@@ -6,7 +6,7 @@ export class UpdateUserByIdUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(id: string, newUserData: string) {
+  async execute(id: string, newUserData: object) {
     if (!id) {
       throw CustomError.BadRequestError(
         'User ID is required to proceed with update execution',
