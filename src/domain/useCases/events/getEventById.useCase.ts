@@ -7,8 +7,8 @@ export class GetEventByIdUseCase {
     this.eventRepository = eventRepository
   }
 
-  async execute(id: string): Promise<EventEntity> {
-    if (!id) {
+  async execute(id?: string): Promise<EventEntity> {
+    if (!id || typeof id !== 'string') {
       throw CustomError.BadRequestError(
         'Event ID is required to proceed with the search execution',
       )
