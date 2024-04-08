@@ -42,7 +42,6 @@ describe('Update user by id', () => {
     }
 
     const user = await sut.execute(id, newUserData)
-    console.log(user)
 
     expect(user.firstName).toBe('Ronaldinho')
     expect(user.lastName).toBe('Gaúcho')
@@ -50,7 +49,7 @@ describe('Update user by id', () => {
     expect(mockUserRepository.findUserByIdAndUpdate).toHaveBeenCalledTimes(1)
   })
 
-  it('should return an exception when the user ID is not provided for search and update', async () => {
+  it('Should return an exception when the user ID is not provided for search and update', async () => {
     const mockUser = {
       _id: '65ff47ddd240477491b399bf',
       firstName: 'John',
@@ -77,5 +76,34 @@ describe('Update user by id', () => {
     )
 
     expect(mockUserRepository.findUserByIdAndUpdate).not.toHaveBeenCalled()
+  })
+
+  it('Should return an exception when no user is found with the provided ID', async () => {
+    const mockUser = {
+      _id: '65ff47ddd240477491b399bf',
+      firstName: 'John',
+      lastName: 'Doe',
+      cpf: '12345678901',
+      password: 'genericpassword',
+      emailAddress: 'johndoe@example.com',
+      userName: 'john.doe',
+      phoneNumber: '+1234567890',
+      gender: 'Male',
+    }
+
+    const { sut, mockUserRepository } = makeSut([mockUser])
+
+    const id = '65ff47ddd240477491b399b'
+
+    const newUserData = {
+      firstName: 'Ronaldinho',
+      lastName: 'Gaúcho',
+    }
+
+    await expect(sut.execute(id, newUserData)).rejects.toThrow(
+      CustomError.NotFoundError('User not found for update'),
+    )
+
+    expect(mockUserRepository.findUserByIdAndUpdate).toHaveBeenCalledTimes(1)
   })
 })
