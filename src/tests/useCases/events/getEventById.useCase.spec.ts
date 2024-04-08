@@ -68,4 +68,31 @@ describe('Get event by id', () => {
 
     expect(mockEventRepository.findEventById).not.toHaveBeenCalled()
   })
+
+  it('Should throw exception when the event is not found by the provided ID', async () => {
+    const mockEvent = {
+      _id: '6602d505cfa1f38f545a4542',
+      eventName: 'Mock Event',
+      eventDescription: 'Mock Event',
+      cnpj: '12345678901220',
+      location: 'São Paulo',
+      eventType: 'Social Event',
+      eventTicketPrice: 1000,
+      venueCapacity: 1000,
+      contactInformation: 'Test mock event',
+      paymentMethod: 'Credit',
+    }
+
+    const { sut, mockEventRepository } = makeSut([mockEvent])
+
+    const id = '6602d505cfa1f38f545a454'
+
+    const event = sut.execute(id)
+
+    await expect(event).rejects.toThrow(
+      CustomError.NotFoundError('Event ID not found'),
+    )
+
+    expect(mockEventRepository.findEventById).toHaveBeenCalledTimes(1)
+  })
 })
