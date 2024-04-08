@@ -26,17 +26,14 @@ export class UserRepositoryInMemory implements IUserRepository {
     return user
   }
 
-  async findUserByIdAndUpdate(
-    id: string,
-    newUserData: Partial<UserEntity | null>,
-  ) {
-    const index = this.users.findIndex((user) => user._id === id)
-    if (index === -1) {
-      return null
+  async findUserByIdAndUpdate(id: string, newUserData: any) {
+    const userIndex = this.users.findIndex((user) => user._id === id)
+    if (userIndex !== -1) {
+      this.users[userIndex] = { ...this.users[userIndex], ...newUserData }
+      return this.users[userIndex]
     }
 
-    this.users[index] = { ...this.users[index], ...newUserData }
-    return this.users[index]
+    return null
   }
 
   async deleteUserById(id: string) {
