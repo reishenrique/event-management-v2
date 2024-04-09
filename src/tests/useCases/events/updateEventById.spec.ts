@@ -43,7 +43,6 @@ describe('Update event by id', () => {
     }
 
     const event = await sut.execute(id, newEventData)
-    console.log(event)
 
     expect(event.eventName).toBe('Mock Event - Updated')
     expect(event.eventDescription).toBe('Mock Event - Updated')

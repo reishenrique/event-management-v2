@@ -36,9 +36,12 @@ export class UserRepositoryInMemory implements IUserRepository {
   }
 
   async deleteUserById(id: string) {
-    const index = this.users.findIndex((user) => user.id === id)
-    if (index !== -1) {
-      this.users.splice(index, 1)
+    const userIndex = this.users.findIndex((user) => user._id === id)
+    if (userIndex !== -1) {
+      const deletedUser = this.users.splice(userIndex, 1)[0]
+      return deletedUser
     }
+
+    return null
   }
 }
