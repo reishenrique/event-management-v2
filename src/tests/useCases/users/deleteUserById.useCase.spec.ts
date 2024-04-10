@@ -67,6 +67,8 @@ describe('Delete user by id use case', () => {
       CustomError.NotFoundError('User not found or registered'),
     )
 
+    expect(mockUserRepository.findUserById).toHaveBeenCalledTimes(1)
+
     expect(mockUserRepository.deleteUserById).not.toHaveBeenCalled()
   })
 })
