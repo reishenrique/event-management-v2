@@ -38,3 +38,48 @@ npm install
 npm run dev
 ```
 
+## 📫 Contributing to the project
+
+1. Clone this repository
+2. (Make sure that before creating a new branch, it is updated with main)
+3. Create a branch: `git checkout -b <branch-name>` 
+4. Make your changes and confirm them: `git commit -m <commit-message>`
+5. Send to the original branch: `git push origin <name-project>/<local>`
+6. Create the pull request
+
+I will love to review your improvement points!
+
+## 🚀 Starting the unit tests developed for the use cases
+
+All the use cases developed for the system have been tested using Jest.
+
+You can see how they are structured by following the path: `src > tests > useCases > events or users` 
+
+Below is the script that initializes the tests: 
+
+```
+npm test
+```
+
+## 📫 Endpoints available in the system
+
+1. Users
+- POST http://localhost:3000/api/v2/user/createUser
+- GET http://localhost:3000/api/v2/user/getbycpf/11122233392
+- GET http://localhost:3000/api/v2/user/getbyid/65e5e90b4760390944a86f5a
+- PUT http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+- DELETE http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+
+2. Events
+- POST http://localhost:3000/api/v2/event/createEvent
+- GET http://localhost:3000/api/v2/event/getbycnpj/12345678901221
+- GET http://localhost:3000/api/v2/event/getbyid/65e5e95d4760390944a86f64
+- PUT http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
+- DELETE  http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
+
+3. Authentication/Login
+- POST http://localhost:3000/api/v2/auth/login
+- POST http://localhost:3000/api/v2/auth/verifyToken
+
+The payloads and parameters for each endpoint can be checked in the `routes.http` file at the root of the project.
+
