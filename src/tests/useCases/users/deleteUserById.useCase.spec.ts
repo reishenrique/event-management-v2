@@ -45,4 +45,28 @@ describe('Delete user by id use case', () => {
     expect(mockUserRepository.findUserById).toHaveBeenCalledTimes(1)
     expect(mockUserRepository.deleteUserById).toHaveBeenCalledTimes(1)
   })
+
+  it('Should return ax exception when the user is not fount by ID for deletion', async () => {
+    const mockUser = {
+      _id: '65ff47ddd240477491b399bf',
+      firstName: 'John',
+      lastName: 'Doe',
+      cpf: '12345678901',
+      password: 'genericpassword',
+      emailAddress: 'johndoe@example.com',
+      userName: 'john.doe',
+      phoneNumber: '+1234567890',
+      gender: 'Male',
+    }
+
+    const { sut, mockUserRepository } = makeSut([mockUser])
+
+    const id = '65ff47ddd240477491b399b'
+
+    await expect(sut.execute(id)).rejects.toThrow(
+      CustomError.NotFoundError('User not found or registered'),
+    )
+
+    expect(mockUserRepository.deleteUserById).not.toHaveBeenCalled()
+  })
 })
