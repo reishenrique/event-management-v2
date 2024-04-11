@@ -4,11 +4,9 @@ import verifyToken from '../../middlewares/authorization'
 
 const authRoutes = Router()
 
-authRoutes.post('/auth/login', new AuthController().login)
-authRoutes.post(
-  '/auth/verifytoken',
-  verifyToken,
-  new AuthController().authenticated,
-)
+const authController = new AuthController()
+
+authRoutes.post('/auth/login', authController.login)
+authRoutes.post('/auth/verifyToken', verifyToken, authController.login)
 
 export default authRoutes
