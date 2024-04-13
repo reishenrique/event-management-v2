@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { formatCpfCnpj } from '../../../utils/formatCpfCnpj'
+import { formatCpf } from '../../../utils/formatCpfCnpj'
 import { UserEntity } from '../../entities/UserEntity'
 import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
@@ -14,7 +14,7 @@ export class CreateUserUseCase {
     const { cpf, emailAddress }: { cpf: string; emailAddress: string } =
       user as any
 
-    const formattedCpf = formatCpfCnpj(cpf)
+    const formattedCpf = formatCpf(cpf)
 
     const userExistsByCPF =
       await this.userRepository.findUserByCpf(formattedCpf)
