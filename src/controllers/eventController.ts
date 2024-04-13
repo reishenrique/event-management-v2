@@ -41,7 +41,7 @@ export class EventController implements IEventController {
         .optional(),
       cnpj: z
         .string({ required_error: 'CNPJ is required' })
-        .length(14, { message: 'The CNPJ need contain 14 digits' })
+        .length(18, { message: 'The CNPJ need contain 14 digits' })
         .optional(),
       location: z.string({ required_error: 'Location is required' }).optional(),
       eventType: z
