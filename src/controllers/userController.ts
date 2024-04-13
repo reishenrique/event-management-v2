@@ -38,7 +38,7 @@ class UserController implements IUserController {
       userName: z.string({ required_error: 'Username is required' }).optional(),
       cpf: z
         .string({ required_error: 'CPF is required' })
-        .length(11, { message: 'The CPF need to contain 11 digits' })
+        .length(14, { message: 'The CPF need to contain 11 digits' })
         .optional(),
       emailAddress: z
         .string()

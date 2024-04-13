@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { formatCpfCnpj } from '../../../utils/formatCpfCnpj'
 import { UserEntity } from '../../entities/UserEntity'
 import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
@@ -13,7 +14,10 @@ export class CreateUserUseCase {
     const { cpf, emailAddress }: { cpf: string; emailAddress: string } =
       user as any
 
-    const userExistsByCPF = await this.userRepository.findUserByCpf(cpf)
+    const formattedCpf = formatCpfCnpj(cpf)
+
+    const userExistsByCPF =
+      await this.userRepository.findUserByCpf(formattedCpf)
 
     if (userExistsByCPF) {
       throw CustomError.ConflictError('CPF already registered in the system')
@@ -37,6 +41,7 @@ export class CreateUserUseCase {
 
     const newUser = {
       ...user,
+      cpf: formattedCpf,
       password: hashPassword,
     }
 
