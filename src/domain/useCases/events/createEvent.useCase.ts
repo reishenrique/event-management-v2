@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { formatCnpj } from '../../../utils/formatCpfCnpj'
 import { EventEntity } from '../../entities/EventEntity'
 import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
@@ -19,7 +20,10 @@ export class CreateEventUseCase {
       throw CustomError.ConflictError('Event already registered in the system')
     }
 
-    const eventExistsByCNPJ = await this.eventRepository.findEventByCnpj(cnpj)
+    const formattedCnpj = formatCnpj(cnpj)
+
+    const eventExistsByCNPJ =
+      await this.eventRepository.findEventByCnpj(formattedCnpj)
 
     if (eventExistsByCNPJ) {
       throw CustomError.ConflictError(
@@ -27,7 +31,8 @@ export class CreateEventUseCase {
       )
     }
 
-    const newEvent = event
+    const newEvent = { ...event, cnpj: formattedCnpj }
+
     await this.eventRepository.createEvent(newEvent)
 
     return newEvent
