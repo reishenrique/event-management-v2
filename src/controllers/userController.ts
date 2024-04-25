@@ -33,35 +33,27 @@ class UserController implements IUserController {
 
   async createUser(req: Request, res: Response): Promise<object> {
     const userSchema = z.object({
-      firstName: z.string({ required_error: 'Name is required' }).optional(),
-      lastName: z.string({ required_error: 'Lastname is required' }).optional(),
-      userName: z.string({ required_error: 'Username is required' }).optional(),
+      firstName: z.string({ required_error: 'Name is required' }),
+      lastName: z.string({ required_error: 'Lastname is required' }),
+      userName: z.string({ required_error: 'Username is required' }),
       cpf: z
         .string({ required_error: 'CPF is required' })
-        .length(14, { message: 'The CPF need to contain 11 digits' })
-        .optional(),
-      emailAddress: z
-        .string()
-        .email({ message: 'Invalid email address' })
-        .optional(),
+        .length(14, { message: 'The CPF need to contain 11 digits' }),
+      emailAddress: z.string().email({ message: 'Invalid email address' }),
       phoneNumber: z
         .string({ required_error: 'Phone Number is required' })
-        .length(11, { message: 'The phone number must contain 11 digits' })
-        .optional(),
+        .length(11, { message: 'The phone number must contain 11 digits' }),
       password: z
         .string({ required_error: 'Password is required' })
         .min(6, { message: 'The password must be contain at least 6 digits' })
         .max(15, {
           message: 'The password must contain a maximum of 15 digits',
-        })
-        .optional(),
-      confirmPassword: z
-        .string({
-          required_error:
-            'Password confirmation must be the same as the main password',
-        })
-        .optional(),
-      gender: z.enum(['Male', 'Female']).optional(),
+        }),
+      confirmPassword: z.string({
+        required_error:
+          'Password confirmation must be the same as the main password',
+      }),
+      gender: z.enum(['Male', 'Female']),
     })
 
     try {
