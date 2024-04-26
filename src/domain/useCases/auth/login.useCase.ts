@@ -4,15 +4,17 @@ import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
-import { AuthEntity } from '../../entities/AuthEntity'
 
 export class LoginUseCase {
   constructor(private userRepository: IUserRepository) {
     this.userRepository = userRepository
   }
 
-  async execute(loginUser: AuthEntity): Promise<any> {
-    const { emailAddress, password } = loginUser
+  async execute(loginUser: object): Promise<any> {
+    const {
+      emailAddress,
+      password,
+    }: { emailAddress: string; password: string } = loginUser as any
 
     const secret = process.env.SECRET
 
