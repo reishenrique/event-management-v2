@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Request, Response } from 'express'
-import { StatusCodes } from 'http-status-codes'
-import { UserModel } from '../models/userModel'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
 import z from 'zod'
 import 'dotenv/config'
+import { Request, Response } from 'express'
+import { StatusCodes } from 'http-status-codes'
+import { LoginUseCase } from '../domain/useCases/auth/login.useCase'
 
 interface IAuthController {
   login(req: Request, res: Response): Promise<object>
   authenticated(req: Request, res: Response): Promise<object>
 }
 
-const secret = process.env.SECRET
-
 class AuthController implements IAuthController {
+  constructor(private readonly loginUseCase: LoginUseCase) {
+    this.login = this.login.bind(this)
+  }
+
   async login(req: Request, res: Response): Promise<object> {
     try {
       const loginSchema = z.object({
@@ -32,41 +32,12 @@ class AuthController implements IAuthController {
       })
 
       const loginUser = loginSchema.parse(req.body)
-      const { emailAddress, password } = loginUser
+      const token = await this.loginUseCase.execute(loginUser)
 
-      const user = await UserModel.findOne({ emailAddress })
-      // console.log(user)
-
-      if (!user) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          statusCode: StatusCodes.UNAUTHORIZED,
-          message: 'Unauthorized',
-        })
-      }
-
-      const isValidPassword = await bcrypt.compareSync(
-        password as string,
-        user!.password,
-      )
-
-      if (!isValidPassword) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          statusCode: StatusCodes.UNAUTHORIZED,
-          message: 'Invalid password',
-        })
-      }
-
-      const token = jwt.sign(
-        { id: user._id, email: user.emailAddress },
-        secret || '',
-        {
-          expiresIn: '8h',
-        },
-      )
-
-      return res
-        .status(StatusCodes.OK)
-        .json({ message: 'Authentication successfully performed', token })
+      return res.status(StatusCodes.OK).json({
+        message: 'Authentication successfully performed',
+        token,
+      })
     } catch (error) {
       console.log(
         'Error while executing the user login/authentication endpoint',
