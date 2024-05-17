@@ -8,6 +8,7 @@ import { GetEventByIdUseCase } from '../domain/useCases/events/getEventById.useC
 import { GetEventByCnpjUseCase } from '../domain/useCases/events/getEventByCnpj.useCase'
 import { UpdateEventByIdUseCase } from '../domain/useCases/events/updateEventById.useCase'
 import { DeleteEventByIdUseCase } from '../domain/useCases/events/deleteEventById.useCase'
+import { CustomError } from '../domain/errors/customError'
 
 interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
@@ -86,9 +87,15 @@ export class EventController implements IEventController {
     } catch (error) {
       console.log('Error while executing the event creation endpoint', error)
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error while executing the event creation endpoint',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -107,10 +114,15 @@ export class EventController implements IEventController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message:
-          'Error while executing the endpoint to search for a user by ID',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -129,10 +141,15 @@ export class EventController implements IEventController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message:
-          'Error while executing the endpoint to search for a event by CNPJ',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -157,10 +174,15 @@ export class EventController implements IEventController {
         'Error while executing the endpoint for updating the event by ID',
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message:
-          'Error while executing the endpoint for updating the event by ID',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -180,9 +202,15 @@ export class EventController implements IEventController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error while executing the endpoint for event deletion by ID',
+        message: 'Internal Server Error',
       })
     }
   }
