@@ -7,6 +7,7 @@ import { GetUserByCpfUseCase } from '../domain/useCases/users/getUserByCpf.useCa
 import { GetUserByIdUseCase } from '../domain/useCases/users/getUserById.useCase'
 import { UpdateUserByIdUseCase } from '../domain/useCases/users/updateUserById.useCase'
 import { DeleteUserByIdUseCase } from '../domain/useCases/users/deleteUserById.useCase'
+import { CustomError } from '../domain/errors/customError'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -68,9 +69,15 @@ class UserController implements IUserController {
     } catch (error) {
       console.log('Error while executing the user creation endpoint', error)
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error occurred while executing the user creation endpoint',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -90,10 +97,15 @@ class UserController implements IUserController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message:
-          'Error occurred while executing the endpoint for searching users by CPF',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -111,9 +123,15 @@ class UserController implements IUserController {
     } catch (error) {
       console.log('Error while executing the user search endpoint by ID', error)
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error while executing the user search endpoint by ID',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -136,10 +154,15 @@ class UserController implements IUserController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        message:
-          'Error while executing the endpoint for updating the user by ID',
+        message: 'Internal Server Error',
       })
     }
   }
@@ -158,9 +181,15 @@ class UserController implements IUserController {
         error,
       )
 
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json({
+          message: error.message,
+        })
+      }
+
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        statusCodes: StatusCodes.INTERNAL_SERVER_ERROR,
-        message: 'Error while executing the endpoint for user deletion by ID ',
+        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+        message: 'Internal Server Error',
       })
     }
   }
