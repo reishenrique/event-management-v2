@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import 'dotenv/config'
 import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'
-import { generateAcessToken } from '../../../utils/jwtUtils'
+import { generateAcessToken } from '../../../infraestructure/utils/jwtUtils'
 
 export class LoginUseCase {
   constructor(private userRepository: IUserRepository) {

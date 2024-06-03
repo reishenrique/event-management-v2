@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import EventController from '../../controllers/eventController'
 import verifyToken from '../../middlewares/authorization'
-import { EventRepository } from '../../application/repositories/eventRepository'
-import { CreateEventUseCase } from '../../domain/useCases/events/createEvent.useCase'
-import { GetEventByIdUseCase } from '../../domain/useCases/events/getEventById.useCase'
-import { GetEventByCnpjUseCase } from '../../domain/useCases/events/getEventByCnpj.useCase'
-import { UpdateEventByIdUseCase } from '../../domain/useCases/events/updateEventById.useCase'
-import { DeleteEventByIdUseCase } from '../../domain/useCases/events/deleteEventById.useCase'
+import EventController from '../../../controllers/eventController'
+import { EventRepository } from '../../../application/repositories/eventRepository'
+import { CreateEventUseCase } from '../../../domain/useCases/events/createEvent.useCase'
+import { GetEventByIdUseCase } from '../../../domain/useCases/events/getEventById.useCase'
+import { GetEventByCnpjUseCase } from '../../../domain/useCases/events/getEventByCnpj.useCase'
+import { DeleteEventByIdUseCase } from '../../../domain/useCases/events/deleteEventById.useCase'
+import { UpdateEventByIdUseCase } from '../../../domain/useCases/events/updateEventById.useCase'
 
 const eventRoutes = Router()
 

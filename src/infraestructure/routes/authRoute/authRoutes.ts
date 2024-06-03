@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import AuthController from '../../controllers/authController'
 import verifyToken from '../../middlewares/authorization'
-import { UserRepository } from '../../application/repositories/userRepository'
-import { LoginUseCase } from '../../domain/useCases/auth/login.useCase'
+import AuthController from '../../../controllers/authController'
+import { UserRepository } from '../../../application/repositories/userRepository'
+import { LoginUseCase } from '../../../domain/useCases/auth/login.useCase'
 
 const authRoutes = Router()
 

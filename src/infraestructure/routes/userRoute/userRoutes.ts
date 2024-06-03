@@ -1,11 +1,11 @@
-import { UserRepository } from './../../application/repositories/userRepository'
+import UserController from '../../../controllers/userController'
 import { Router } from 'express'
-import UserController from '../../controllers/userController'
-import { CreateUserUseCase } from '../../domain/useCases/users/createUser.useCase'
-import { GetUserByCpfUseCase } from '../../domain/useCases/users/getUserByCpf.useCase'
-import { GetUserByIdUseCase } from '../../domain/useCases/users/getUserById.useCase'
-import { UpdateUserByIdUseCase } from '../../domain/useCases/users/updateUserById.useCase'
-import { DeleteUserByIdUseCase } from '../../domain/useCases/users/deleteUserById.useCase'
+import { UserRepository } from '../../../application/repositories/userRepository'
+import { CreateUserUseCase } from '../../../domain/useCases/users/createUser.useCase'
+import { DeleteUserByIdUseCase } from '../../../domain/useCases/users/deleteUserById.useCase'
+import { GetUserByCpfUseCase } from '../../../domain/useCases/users/getUserByCpf.useCase'
+import { GetUserByIdUseCase } from '../../../domain/useCases/users/getUserById.useCase'
+import { UpdateUserByIdUseCase } from '../../../domain/useCases/users/updateUserById.useCase'
 
 const userRoutes = Router()
 

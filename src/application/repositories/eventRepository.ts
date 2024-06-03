@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEntity } from '../../domain/entities/EventEntity'
 import { IEventRepository } from '../../domain/interfaces/IEventRepository'
-import { EventModel } from '../../models/eventModel'
+import { EventModel } from '../../infraestructure/models/eventModel'
 
 export class EventRepository implements IEventRepository {
   async createEvent(newEvent: EventEntity): Promise<EventEntity> {
