@@ -1,5 +1,5 @@
 import request from 'supertest'
-import { app } from '../../app'
+import { app } from '../../infraestructure/http/app'
 import mongoose from 'mongoose'
 
 const stringConnection = process.env.DATABASE_CONNECTION as string
