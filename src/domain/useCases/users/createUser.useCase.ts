@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { formatCpf } from '../../../utils/formatCpfCnpj'
+import { formatCpf } from '../../../infraestructure/utils/formatCpfCnpj'
 import { UserEntity } from '../../entities/UserEntity'
 import { CustomError } from '../../errors/customError'
 import { IUserRepository } from '../../interfaces/IUserRepository'

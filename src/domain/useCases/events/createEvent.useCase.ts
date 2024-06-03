@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { formatCnpj } from '../../../utils/formatCpfCnpj'
+import { formatCnpj } from '../../../infraestructure/utils/formatCpfCnpj'
 import { EventEntity } from '../../entities/EventEntity'
 import { CustomError } from '../../errors/customError'
 import { IEventRepository } from '../../interfaces/IEventRepository'
