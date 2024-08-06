@@ -26,9 +26,9 @@ const eventController = new EventController(
   deleteEventByIdUseCase,
 )
 
-eventRoutes.post('/event', verifyToken, eventController.createEvent)
-eventRoutes.get('/event/:id', verifyToken, eventController.getEventById)
-eventRoutes.get('/event/get/:cnpj', verifyToken, eventController.getEventByCnpj)
+eventRoutes.post('/event/new', verifyToken, eventController.createEvent)
+eventRoutes.get('/event/document/:id', verifyToken, eventController.getEventById)
+eventRoutes.get('/event/document/:cnpj', verifyToken, eventController.getEventByCnpj)
 eventRoutes.put('/event/:id', verifyToken, eventController.updateEventById)
 eventRoutes.delete('/event/:id', verifyToken, eventController.deleteEventById)
 
