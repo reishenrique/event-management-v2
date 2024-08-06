@@ -25,9 +25,9 @@ const userController = new UserController(
   deleteUserByIdUseCase,
 )
 
-userRoutes.post('/user', userController.createUser)
-userRoutes.get('/user/:cpf', userController.getUserByCpf)
-userRoutes.get('/user/get/:id', userController.getUserById)
+userRoutes.post('/user/new', userController.createUser)
+userRoutes.get('/user/document/:cpf', userController.getUserByCpf)
+userRoutes.get('/user/document/:id', userController.getUserById)
 userRoutes.put('/user/:id', userController.updateUserById)
 userRoutes.delete('/user/:id', userController.deleteUserById)
 
