@@ -1,14 +1,12 @@
 import { Request, Response } from 'express'
-import { z } from 'zod'
 import { StatusCodes } from 'http-status-codes'
-import { eventTypeEnum } from '../domain/enum/eventTypeEnum'
-import { paymentMethodEnum } from '../domain/enum/paymentMethodEnum'
 import { CreateEventUseCase } from '../domain/useCases/events/createEvent.useCase'
 import { GetEventByIdUseCase } from '../domain/useCases/events/getEventById.useCase'
 import { GetEventByCnpjUseCase } from '../domain/useCases/events/getEventByCnpj.useCase'
 import { UpdateEventByIdUseCase } from '../domain/useCases/events/updateEventById.useCase'
 import { DeleteEventByIdUseCase } from '../domain/useCases/events/deleteEventById.useCase'
 import { CustomError } from '../domain/errors/customError'
+import { eventSchemaValidator } from '../application/validators/eventSchemaValidator'
 
 interface IEventController {
   createEvent(req: Request, res: Response): Promise<object>
@@ -33,50 +31,8 @@ export class EventController implements IEventController {
   }
 
   async createEvent(req: Request, res: Response): Promise<object> {
-    const eventSchema = z.object({
-      eventName: z.string({ required_error: 'Event name is required' }),
-      eventDescription: z.string({ required_error: 'Description is required' }),
-      cnpj: z
-        .string({ required_error: 'CNPJ is required' })
-        .length(18, { message: 'The CNPJ need contain 14 digits' }),
-      location: z.string({ required_error: 'Location is required' }),
-      eventType: z.enum(
-        [
-          eventTypeEnum.ACADEMIC_EDUCATIONAL_EVENT,
-          eventTypeEnum.CORPORATE_EVENT,
-          eventTypeEnum.CULTURAL_ENTERTAINMENT_EVENT,
-          eventTypeEnum.RELIGIOUS_EVENT,
-          eventTypeEnum.SOCIAL_EVENT,
-          eventTypeEnum.SPORTING_EVENT,
-        ],
-        {
-          required_error: 'A type of event needs to be one of those available',
-        },
-      ),
-      eventTicketPrice: z.number({
-        required_error: 'The event ticket price is required',
-      }),
-      venueCapacity: z.number({
-        required_error: 'The venue capacity for the event is required',
-      }),
-      contactInformation: z.string({
-        required_error: 'Contact Information is required ',
-      }),
-      paymentMethodOption: z.enum(
-        [
-          paymentMethodEnum.CREDIT,
-          paymentMethodEnum.DEBIT,
-          paymentMethodEnum.BANK_SLIP,
-        ],
-        {
-          required_error:
-            'The payment method needs to be one of those available',
-        },
-      ),
-    })
-
     try {
-      const event = eventSchema.parse(req.body)
+      const event = eventSchemaValidator.parse(req.body)
       const newEvent = await this.createEventUseCase.execute(event)
 
       return res.status(StatusCodes.CREATED).json({
