@@ -5,6 +5,7 @@ import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { LoginUseCase } from '../domain/useCases/auth/login.useCase'
 import { CustomError } from '../domain/errors/customError'
+import { loginSchemaValidator } from '../application/validators/loginValidator'
 
 interface IAuthController {
   login(req: Request, res: Response): Promise<object>
@@ -18,21 +19,8 @@ class AuthController implements IAuthController {
 
   async login(req: Request, res: Response): Promise<object> {
     try {
-      const loginSchema = z.object({
-        emailAddress: z
-          .string()
-          .email({ message: 'Invalid email address' })
-          .optional(),
-        password: z
-          .string({ required_error: 'Password is required' })
-          .min(6, { message: 'The password must be contain at least 6 digits' })
-          .max(15, {
-            message: 'The password must contain a maximum of 15 digits',
-          })
-          .optional(),
-      })
 
-      const loginUser = loginSchema.parse(req.body)
+      const loginUser = loginSchemaValidator.parse(req.body)
       const token = await this.loginUseCase.execute(loginUser)
 
       return res.status(StatusCodes.OK).json({
