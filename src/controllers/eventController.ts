@@ -15,6 +15,7 @@ interface IEventController {
   updateEventById(req: Request, res: Response): Promise<object>
   deleteEventById(req: Request, res: Response): Promise<object>
 }
+
 export class EventController implements IEventController {
   constructor(
     private readonly createEventUseCase: CreateEventUseCase,
