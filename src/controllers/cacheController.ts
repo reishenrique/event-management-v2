@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { CacheStrategiesEnum } from '../infraestructure/cache/enum/CacheStrategiesEnum';
-import { CacheService } from '../infraestructure/cache/service/cacheService';
-import { Request, Response } from 'express'
+import type { CacheService } from '../infraestructure/cache/service/cacheService';
+import type { Request, Response } from 'express'
 import { CustomError } from '../domain/errors/customError';
 
 interface ICacheController {

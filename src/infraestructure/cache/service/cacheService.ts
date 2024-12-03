@@ -1,5 +1,5 @@
-import CacheStrategy from "../cacheStrategy/abstractCacheStrategy";
-import NodeCacheStrategy from "../cacheStrategy/nodeCacheStrategy";
+import type CacheStrategy from "../cacheStrategy/abstractCacheStrategy";
+import type NodeCacheStrategy from "../cacheStrategy/nodeCacheStrategy";
 import { CacheStrategiesEnum } from "../enum/CacheStrategiesEnum";
 
 export class CacheService {
@@ -9,6 +9,7 @@ export class CacheService {
         this.strategyCacheMap.set(CacheStrategiesEnum.nodeCache, _nodeCacheStrategy)
     }
 
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     public async cacheValue(key: string, value: any, strategy = CacheStrategiesEnum.nodeCache) {
         const strategyCache = this.strategyCacheMap.get(strategy)
         return strategyCache?.setOnCache(key, value)
