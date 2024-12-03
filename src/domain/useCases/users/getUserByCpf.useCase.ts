@@ -1,10 +1,12 @@
+import type { CacheService } from '../../../infraestructure/cache/service/cacheService'
 import { CustomError } from '../../errors/customError'
-import { IUserRepository } from '../../interfaces/IUserRepository'
+import type { IUserRepository } from '../../interfaces/IUserRepository'
 
 export class GetUserByCpfUseCase {
-  constructor(private userRepository: IUserRepository) {
-    this.userRepository = userRepository
-  }
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly cacheService: CacheService
+  ) { }
 
   async execute(cpf?: string) {
     if (!cpf || typeof cpf !== 'string') {
@@ -13,10 +15,18 @@ export class GetUserByCpfUseCase {
       )
     }
 
-    const getUserByCpf = await this.userRepository.findUserByCpf(cpf)
+    const cacheKey = `user:${cpf}`
+
+    let getUserByCpf = await this.cacheService.getCacheValue(cacheKey)
 
     if (!getUserByCpf) {
-      throw CustomError.NotFoundError('User not found or registered')
+      getUserByCpf = await this.userRepository.findUserByCpf(cpf)
+
+      if (!getUserByCpf) {
+        throw CustomError.NotFoundError('User not found or registered')
+      }
+
+      await this.cacheService.cacheValue(cacheKey, getUserByCpf)
     }
 
     return getUserByCpf
