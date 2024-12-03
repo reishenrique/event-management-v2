@@ -6,13 +6,19 @@ import { DeleteUserByIdUseCase } from '../../../domain/useCases/users/deleteUser
 import { GetUserByCpfUseCase } from '../../../domain/useCases/users/getUserByCpf.useCase'
 import { GetUserByIdUseCase } from '../../../domain/useCases/users/getUserById.useCase'
 import { UpdateUserByIdUseCase } from '../../../domain/useCases/users/updateUserById.useCase'
+import { CacheService } from '../../cache/service/cacheService'
+import NodeCacheStrategy from '../../cache/cacheStrategy/nodeCacheStrategy'
 
 const userRoutes = Router()
 
 const userRepository = new UserRepository()
 
+
+const nodeCacheStrategy = new NodeCacheStrategy()
+const cacheService = new CacheService(nodeCacheStrategy)
+
 const createUserUseCase = new CreateUserUseCase(userRepository)
-const getUserByCpfUseCase = new GetUserByCpfUseCase(userRepository)
+const getUserByCpfUseCase = new GetUserByCpfUseCase(userRepository, cacheService)
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository)
 const updateUserByIdUseCase = new UpdateUserByIdUseCase(userRepository)
 const deleteUserByIdUseCase = new DeleteUserByIdUseCase(userRepository)
