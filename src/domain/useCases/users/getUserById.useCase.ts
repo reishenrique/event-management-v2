@@ -1,10 +1,12 @@
 import { CustomError } from '../../errors/customError'
-import { IUserRepository } from '../../interfaces/IUserRepository'
+import type { CacheService } from '../../../infraestructure/cache/service/cacheService'
+import type { IUserRepository } from '../../interfaces/IUserRepository'
 
 export class GetUserByIdUseCase {
-  constructor(private userRepository: IUserRepository) {
-    this.userRepository = userRepository
-  }
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly cacheService: CacheService
+  ) { }
 
   async execute(id?: string) {
     if (!id || typeof id !== 'string') {
@@ -13,10 +15,18 @@ export class GetUserByIdUseCase {
       )
     }
 
-    const getUserById = await this.userRepository.findUserById(id)
+    const cacheKey = `userId:${id}`
+
+    let getUserById = await this.cacheService.getCacheValue(cacheKey)
 
     if (!getUserById) {
+      getUserById = await this.userRepository.findUserById(id)
+
+      if (!getUserById) {
       throw CustomError.NotFoundError('User not found or registered')
+      }
+
+      await this.cacheService.cacheValue(cacheKey, getUserById)
     }
 
     return getUserById
