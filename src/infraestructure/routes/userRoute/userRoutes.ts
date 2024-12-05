@@ -19,7 +19,7 @@ const cacheService = new CacheService(nodeCacheStrategy)
 
 const createUserUseCase = new CreateUserUseCase(userRepository)
 const getUserByCpfUseCase = new GetUserByCpfUseCase(userRepository, cacheService)
-const getUserByIdUseCase = new GetUserByIdUseCase(userRepository)
+const getUserByIdUseCase = new GetUserByIdUseCase(userRepository, cacheService)
 const updateUserByIdUseCase = new UpdateUserByIdUseCase(userRepository)
 const deleteUserByIdUseCase = new DeleteUserByIdUseCase(userRepository)
 
