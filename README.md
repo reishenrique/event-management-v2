@@ -64,22 +64,22 @@ npm test
 ## 📫 Endpoints available in the system
 
 1. Users
-- POST http://localhost:3000/api/v2/user/createUser
-- GET http://localhost:3000/api/v2/user/getbycpf/11122233392
-- GET http://localhost:3000/api/v2/user/getbyid/65e5e90b4760390944a86f5a
-- PUT http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
-- DELETE http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+- POST api/v2/user/createUser
+- GET api/v2/user/getbycpf/11122233392
+- GET api/v2/user/getbyid/65e5e90b4760390944a86f5a
+- PUT api/v2/user/65e5e90b4760390944a86f5a
+- DELETE api/v2/user/65e5e90b4760390944a86f5a
 
 2. Events
-- POST http://localhost:3000/api/v2/event/createEvent
-- GET http://localhost:3000/api/v2/event/getbycnpj/12345678901221
-- GET http://localhost:3000/api/v2/event/getbyid/65e5e95d4760390944a86f64
-- PUT http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
-- DELETE  http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
+- POST api/v2/event/createEvent
+- GET api/v2/event/getbycnpj/12345678901221
+- GET api/v2/event/getbyid/65e5e95d4760390944a86f64
+- PUT api/v2/event/65e5e95d4760390944a86f64
+- DELETE  api/v2/event/65e5e95d4760390944a86f64
 
 3. Authentication/Login
-- POST http://localhost:3000/api/v2/auth/login
-- POST http://localhost:3000/api/v2/auth/verifyToken
+- POST api/v2/auth/login
+- POST api/v2/auth/verifyToken
 
 The payloads and parameters for each endpoint can be checked in the `routes.http` file at the root of the project.
 
