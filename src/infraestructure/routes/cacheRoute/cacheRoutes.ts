@@ -1,13 +1,16 @@
-import { Router } from "express";
-import { CacheService } from "../../cache/service/cacheService";
-import NodeCacheStrategy from "../../cache/cacheStrategy/nodeCacheStrategy";
+import { Router } from 'express'
+import verifyToken from '../../middlewares/authorization'
+import { CacheController } from '../../../controllers/cacheController'
+import { cacheService } from '../../cache/cacheInstance'
 
 const cacheRoutes = Router()
 
-const nodeCacheStrategy = new NodeCacheStrategy()
+const cacheController = new CacheController(cacheService)
 
-const cacheService = new CacheService(nodeCacheStrategy)
-
-cacheRoutes.post('/clear', cacheService.clearAllCacheValues)
+cacheRoutes.post(
+  '/cache/clear/:strategy?',
+  verifyToken,
+  cacheController.clearCache,
+)
 
 export default cacheRoutes

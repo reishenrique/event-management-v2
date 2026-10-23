@@ -16,7 +16,7 @@ export class LoginUseCase {
       password,
     }: { emailAddress: string; password: string } = loginUser as any
 
-    const user = await this.userRepository.findUserByEmail(
+    const user = await this.userRepository.findUserByEmailForAuth(
       emailAddress as string,
     )
 
@@ -24,7 +24,7 @@ export class LoginUseCase {
       throw CustomError.UnauthorizedError('Unauthorized')
     }
 
-    const isValidPassword = await bcrypt.compareSync(
+    const isValidPassword = await bcrypt.compare(
       password as string,
       user.password,
     )

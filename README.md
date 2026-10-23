@@ -64,22 +64,25 @@ npm test
 ## 📫 Endpoints available in the system
 
 1. Users
-- POST api/v2/user/createUser
-- GET api/v2/user/getbycpf/11122233392
-- GET api/v2/user/getbyid/65e5e90b4760390944a86f5a
-- PUT api/v2/user/65e5e90b4760390944a86f5a
-- DELETE api/v2/user/65e5e90b4760390944a86f5a
+- POST api/v2/user/new (public)
+- GET api/v2/user/document/44477766640 (Bearer token)
+- GET api/v2/user/id/65e5e90b4760390944a86f5a (Bearer token)
+- PUT api/v2/user/65e5e90b4760390944a86f5a (Bearer token)
+- DELETE api/v2/user/65e5e90b4760390944a86f5a (Bearer token)
 
 2. Events
-- POST api/v2/event/createEvent
-- GET api/v2/event/getbycnpj/12345678901221
-- GET api/v2/event/getbyid/65e5e95d4760390944a86f64
-- PUT api/v2/event/65e5e95d4760390944a86f64
-- DELETE  api/v2/event/65e5e95d4760390944a86f64
+- POST api/v2/event/new (Bearer token)
+- GET api/v2/event/document/12345678000121 (Bearer token)
+- GET api/v2/event/id/65e5e95d4760390944a86f64 (Bearer token)
+- PUT api/v2/event/65e5e95d4760390944a86f64 (Bearer token)
+- DELETE  api/v2/event/65e5e95d4760390944a86f64 (Bearer token)
 
 3. Authentication/Login
-- POST api/v2/auth/login
-- POST api/v2/auth/verifyToken
+- POST api/v2/auth/login (public)
+- POST api/v2/auth/verifyToken (Bearer token)
+
+4. Cache
+- POST api/v2/cache/clear (Bearer token)
 
 The payloads and parameters for each endpoint can be checked in the `routes.http` file at the root of the project.
 

@@ -8,6 +8,7 @@ export class UserRepositoryInMemory implements IUserRepository {
 
   async createUser(newUser: object) {
     this.users.push(newUser)
+    return newUser
   }
 
   async findUserByCpf(cpf: string) {
@@ -16,6 +17,11 @@ export class UserRepositoryInMemory implements IUserRepository {
   }
 
   async findUserByEmail(emailAddress: string) {
+    const user = this.users.find((user) => user.emailAddress === emailAddress)
+    return user
+  }
+
+  async findUserByEmailForAuth(emailAddress: string) {
     const user = this.users.find((user) => user.emailAddress === emailAddress)
     return user
   }

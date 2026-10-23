@@ -14,7 +14,8 @@ export class CacheController implements ICacheController {
     }
 
     async clearCache(req: Request, res: Response): Promise<object> {
-        const strategy = req.params.strategy as CacheStrategiesEnum
+        const strategy = (req.params.strategy ??
+            CacheStrategiesEnum.nodeCache) as CacheStrategiesEnum
 
         try {
             if (!Object.values(CacheStrategiesEnum).includes(strategy)) {
