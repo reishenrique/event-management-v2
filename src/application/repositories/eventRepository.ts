@@ -1,12 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEntity } from '../../domain/entities/EventEntity'
+import { CustomError } from '../../domain/errors/customError'
 import { IEventRepository } from '../../domain/interfaces/IEventRepository'
 import { EventModel } from '../../infraestructure/models/eventModel'
+import { isDuplicateKeyError } from './mongoErrors'
 
 export class EventRepository implements IEventRepository {
   async createEvent(newEvent: EventEntity): Promise<EventEntity> {
-    const event = await EventModel.create(newEvent)
-    return event
+    try {
+      const event = await EventModel.create(newEvent)
+      return event
+    } catch (error) {
+      if (isDuplicateKeyError(error)) {
+        throw CustomError.ConflictError(
+          'The CNPJ for event registration is already in use',
+        )
+      }
+
+      throw error
+    }
   }
 
   async findEventByName(eventName: string): Promise<any> {

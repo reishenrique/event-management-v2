@@ -14,9 +14,9 @@ interface IUserModel {
 const userModelSchema = new Schema<IUserModel>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  cpf: { type: String, required: true },
-  password: { type: String, required: false },
-  emailAddress: { type: String, required: true },
+  cpf: { type: String, required: true, unique: true },
+  password: { type: String, required: false, select: false },
+  emailAddress: { type: String, required: true, unique: true },
   userName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   gender: { type: String, required: false },

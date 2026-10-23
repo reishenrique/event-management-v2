@@ -15,7 +15,7 @@ interface IEventModel {
 const eventModelSchema = new Schema<IEventModel>({
   eventName: { type: String, required: true },
   eventDescription: { type: String, required: true },
-  cnpj: { type: String, required: true },
+  cnpj: { type: String, required: true, unique: true },
   location: { type: String, required: true },
   eventType: { type: String, required: true },
   eventTicketPrice: { type: Number, required: true },

@@ -1,13 +1,18 @@
 import { CustomError } from '../../../domain/errors/customError'
 import { IUserRepository } from '../../../domain/interfaces/IUserRepository'
 import { GetUserByIdUseCase } from '../../../domain/useCases/users/getUserById.useCase'
+import { CacheService } from '../../../infraestructure/cache/service/cacheService'
+import NodeCacheStrategy from '../../../infraestructure/cache/cacheStrategy/nodeCacheStrategy'
 import { UserRepositoryInMemory } from '../../mock/userRepositoryInMemory'
 
 const makeSut = (
   users?: any,
 ): { sut: GetUserByIdUseCase; mockUserRepository: IUserRepository } => {
   const mockUserRepository = new UserRepositoryInMemory(users)
-  const sut = new GetUserByIdUseCase(mockUserRepository)
+  const sut = new GetUserByIdUseCase(
+    mockUserRepository,
+    new CacheService(new NodeCacheStrategy()),
+  )
 
   jest.spyOn(mockUserRepository, 'findUserById')
 

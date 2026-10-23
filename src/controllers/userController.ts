@@ -7,7 +7,11 @@ import { GetUserByIdUseCase } from '../domain/useCases/users/getUserById.useCase
 import { UpdateUserByIdUseCase } from '../domain/useCases/users/updateUserById.useCase'
 import { DeleteUserByIdUseCase } from '../domain/useCases/users/deleteUserById.useCase'
 import { CustomError } from '../domain/errors/customError'
-import { userSchemaValidator } from '../application/validators/userSchemaValidator'
+import { toPublicUser } from '../application/mappers/userMapper'
+import {
+  updateUserSchemaValidator,
+  userSchemaValidator,
+} from '../application/validators/userSchemaValidator'
 
 interface IUserController {
   createUser(req: Request, res: Response): Promise<object>
@@ -40,7 +44,7 @@ class UserController implements IUserController {
       return res.status(StatusCodes.CREATED).json({
         statusCode: StatusCodes.CREATED,
         message: 'User created successfully',
-        user: newUser,
+        user: toPublicUser(newUser),
       })
     } catch (error) {
       console.log('Error while executing the user creation endpoint', error)
@@ -66,7 +70,7 @@ class UserController implements IUserController {
 
       return res
         .status(StatusCodes.OK)
-        .json({ statusCode: StatusCodes.OK, user: getUserByCpf })
+        .json({ statusCode: StatusCodes.OK, user: toPublicUser(getUserByCpf) })
     } catch (error) {
       console.log(
         'Error while executing the endpoint to search for a user by CPF',
@@ -94,7 +98,7 @@ class UserController implements IUserController {
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
-        user: getUserById,
+        user: toPublicUser(getUserById),
       })
     } catch (error) {
       console.log('Error while executing the user search endpoint by ID', error)
@@ -115,14 +119,14 @@ class UserController implements IUserController {
   async updateUserById(req: Request, res: Response): Promise<object> {
     try {
       const { id } = req.params
-      const newUserData = req.body
+      const newUserData = updateUserSchemaValidator.parse(req.body)
 
       const user = await this.updateUserByIdUseCase.execute(id, newUserData)
 
       return res.status(StatusCodes.OK).json({
         statusCode: StatusCodes.OK,
         message: 'User data successfully updated',
-        updatedUser: user,
+        updatedUser: toPublicUser(user),
       })
     } catch (error) {
       console.log(

@@ -7,7 +7,10 @@ export const eventSchemaValidator = z.object({
     eventDescription: z.string({ required_error: 'Description is required' }),
     cnpj: z
         .string({ required_error: 'CNPJ is required' })
-        .length(18, { message: 'The CNPJ need contain 14 digits' }),
+        .transform((value) => value.replace(/\D/g, ''))
+        .refine((value) => value.length === 14, {
+            message: 'The CNPJ must contain 14 digits',
+        }),
     location: z.string({ required_error: 'Location is required' }),
     eventType: z.enum(
         [

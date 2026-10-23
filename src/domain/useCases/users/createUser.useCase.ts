@@ -30,23 +30,25 @@ export class CreateUserUseCase {
       throw CustomError.ConflictError('E-mail already registered in the system')
     }
 
-    const saltRounds = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(user.password as string, saltRounds)
+    const passwordsDoNotMatch = user.password !== user.confirmPassword
 
-    const matchPassword = user.password !== user.confirmPassword
-
-    if (matchPassword) {
+    if (passwordsDoNotMatch) {
       throw CustomError.BadRequestError('The passwords do not match')
     }
 
+    const hashPassword = await bcrypt.hash(user.password as string, 10)
+
+    const userWithoutConfirmation = { ...user }
+    delete userWithoutConfirmation.confirmPassword
+
     const newUser = {
-      ...user,
+      ...userWithoutConfirmation,
       cpf: formattedCpf,
       password: hashPassword,
     }
 
-    await this.userRepository.createUser(newUser)
+    const createdUser = await this.userRepository.createUser(newUser)
 
-    return newUser
+    return createdUser
   }
 }

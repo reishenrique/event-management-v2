@@ -1,69 +1,76 @@
-// User Routes
+@token = <cole aqui o token retornado pelo login>
+@userId = 65e5e90b4760390944a86f5a
+@eventId = 65e5e95d4760390944a86f64
 
-//Create new user
+// ---------------------------------------------------------------------------
+// Users
+// ---------------------------------------------------------------------------
 
-POST http://localhost:3000/api/v2/user/createUser
+// Create new user (public)
+POST http://localhost:3000/api/v2/user/new
 Content-Type: application/json
 
 {
-    "firstName": "####",
-	"lastName": "####",
-	"userName": "####",
-	"cpf": "####",
-	"emailAddress": "####",
-	"phoneNumber": "########",
-	"password": "#########",
-	"confirmPassword" :"#######",
-	"gender": "####"
+    "firstName": "Henrique",
+    "lastName": "Teste",
+    "userName": "henriqueteste",
+    "cpf": "444.777.666-40",
+    "emailAddress": "henrique@test.com",
+    "phoneNumber": "11951415851",
+    "password": "hprhpr09",
+    "confirmPassword": "hprhpr09",
+    "gender": "Male"
 }
 
 ###
 
-// Get user by cpf
-GET http://localhost:3000/api/v2/user/getbycpf/11122233392
-Content-Type: application/json
+// Get user by CPF (requires token)
+GET http://localhost:3000/api/v2/user/document/44477766640
+Authorization: Bearer {{token}}
 
 ###
 
-// Get user by ID
-GET http://localhost:3000/api/v2/user/getbyid/65e5e90b4760390944a86f5a
-Content-Type: application/json
+// Get user by ID (requires token)
+GET http://localhost:3000/api/v2/user/id/{{userId}}
+Authorization: Bearer {{token}}
 
 ###
 
-// Update user by ID
-PUT http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
+// Update user by ID (requires token; only editable fields are accepted)
+PUT http://localhost:3000/api/v2/user/{{userId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "firstName": "Teste Atualização",
-	"lastName": "Teste Atualização",
-	"userName": "teste1atualizacao"
+    "lastName": "Teste Atualização",
+    "userName": "teste1atualizacao"
 }
 
+###
+
+// Delete user by ID (requires token)
+DELETE http://localhost:3000/api/v2/user/{{userId}}
+Authorization: Bearer {{token}}
 
 ###
 
-// Delete usr by ID
-DELETE http://localhost:3000/api/v2/user/65e5e90b4760390944a86f5a
-Content-Type: application/json
+// ---------------------------------------------------------------------------
+// Events
+// ---------------------------------------------------------------------------
 
-
-###
-
-// Event Routes
-
-// Create new event
-POST http://localhost:3000/api/v2/event/createEvent
+// Create new event (requires token)
+POST http://localhost:3000/api/v2/event/new
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
 	"eventName": "Teste Evento",
 	"eventDescription": "Teste Descrição Evento",
-	"cnpj": "12345678901221",
+	"cnpj": "12.345.678/0001-21",
 	"location": "Guarulhos",
 	"eventType": "Social Event",
-	"eventTicketPrice": "1000",
+	"eventTicketPrice": 1000,
 	"venueCapacity": 1000,
 	"contactInformation": "Teste",
 	"paymentMethodOption": "Credit"
@@ -71,51 +78,61 @@ Content-Type: application/json
 
 ###
 
-// Get event by CNPJ
+// Get event by CNPJ (requires token; digits only in the path)
+GET http://localhost:3000/api/v2/event/document/12345678000121
+Authorization: Bearer {{token}}
 
-GET http://localhost:3000/api/v2/event/getbycnpj/12345678901221
+###
+
+// Get event by ID (requires token)
+GET http://localhost:3000/api/v2/event/id/{{eventId}}
+Authorization: Bearer {{token}}
+
+###
+
+// Update event by ID (requires token)
+PUT http://localhost:3000/api/v2/event/{{eventId}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 ###
 
-// Get event by ID
-GET http://localhost:3000/api/v2/event/getbyid/65e5e95d4760390944a86f64
-Content-Type: application/json
-
-### 
-
-// Update event by ID
-PUT http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
-Content-Type: application/json
+// Delete event by ID (requires token)
+DELETE http://localhost:3000/api/v2/event/{{eventId}}
+Authorization: Bearer {{token}}
 
 ###
 
-// Delete event by ID
-DELETE  http://localhost:3000/api/v2/event/65e5e95d4760390944a86f64
-Content-Type: application/json
+// ---------------------------------------------------------------------------
+// Authentication
+// ---------------------------------------------------------------------------
 
-
-###
-
-// Authentication Routes
-
-// User login
+// User login (public)
 POST http://localhost:3000/api/v2/auth/login
 Content-Type: application/json
 
 {
-	"emailAddress": "henriqueauth@test.com",
-	"password": "testehenrique"
+	"emailAddress": "henrique@test.com",
+	"password": "hprhpr09"
 }
 
 ###
 
-// Verify token
+// Verify token (requires Authorization header)
 POST http://localhost:3000/api/v2/auth/verifyToken
-Content-Type: application/json
+Authorization: Bearer {{token}}
 
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-        eyJpZCI6IjY1ZTFlM2Y4NmY3YTI5ZDNlYThjYzdmMiIsImVtYWlsIjoiaGVucmlxdWVhdXRoQHRlc3QuY29tIiwiaWF0IjoxNzA5NTY0MzU2LCJleHAiOjE3MDk1OTMxNTZ9.
-        2IRekHSmFMgPesd2PhqGfuU0lSq2JI-y8V3RIdLCT78"
-}
+###
+
+// ---------------------------------------------------------------------------
+// Cache
+// ---------------------------------------------------------------------------
+
+// Clear the shared cache (requires token; strategy is optional)
+POST http://localhost:3000/api/v2/cache/clear
+Authorization: Bearer {{token}}
+
+###
+
+POST http://localhost:3000/api/v2/cache/clear/nodeCache
+Authorization: Bearer {{token}}

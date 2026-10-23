@@ -5,26 +5,31 @@ import 'dotenv/config'
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const secret = process.env.SECRET
 
-  const tokenHeader = req.headers.authorization
-  // console.log('TokenHeader:', tokenHeader)
+  const [scheme, token] = (req.headers.authorization ?? '').split(' ')
 
-  const token = tokenHeader && tokenHeader.split(' ')[1]
-  // console.log('Token:', token)
+  if (scheme !== 'Bearer' || !token) {
+    return res.status(401).json({
+      statusCode: 401,
+      message: 'Missing or malformed Authorization header',
+    })
+  }
 
-  if (!token) {
-    return next(new Error('Token unauthorized'))
+  if (!secret) {
+    console.error('SECRET is not configured; refusing to verify tokens')
+    return res.status(500).json({
+      statusCode: 500,
+      message: 'Internal Server Error',
+    })
   }
 
   try {
-    const decodedToken = jwt.verify(token, secret || '')
-    res.locals.token = decodedToken
-
+    res.locals.token = jwt.verify(token, secret)
     next()
-  } catch (error) {
-    console.log(
-      'Error when executing token verification, invalid JWT signature',
-    )
-    next(error)
+  } catch {
+    return res.status(401).json({
+      statusCode: 401,
+      message: 'Invalid or expired token',
+    })
   }
 }
 

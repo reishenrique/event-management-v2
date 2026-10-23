@@ -6,7 +6,10 @@ export const userSchemaValidator = z.object({
     userName: z.string({ required_error: 'Username is required' }),
     cpf: z
         .string({ required_error: 'CPF is required' })
-        .length(14, { message: 'The CPF need to contain 11 digits' }),
+        .transform((value) => value.replace(/\D/g, ''))
+        .refine((value) => value.length === 11, {
+            message: 'The CPF must contain 11 digits',
+        }),
     emailAddress: z.string().email({ message: 'Invalid email address' }),
     phoneNumber: z
         .string({ required_error: 'Phone Number is required' })
@@ -23,3 +26,18 @@ export const userSchemaValidator = z.object({
     }),
     gender: z.enum(['Male', 'Female']),
 })
+
+/**
+ * Update is an allowlist on purpose: fields like password, cpf and
+ * emailAddress must change through their own verified flows.
+ */
+export const updateUserSchemaValidator = userSchemaValidator
+    .pick({
+        firstName: true,
+        lastName: true,
+        userName: true,
+        phoneNumber: true,
+        gender: true,
+    })
+    .partial()
+    .strict()
