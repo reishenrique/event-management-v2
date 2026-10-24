@@ -5,13 +5,17 @@ on:
     branches: [staging]
   pull_request:
     branches: [staging]
+  # Runs the same checks on the temporary branch created by the merge queue.
+  merge_group:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
+  # A new commit cancels the previous PR run, but merge-queue runs must finish.
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-and-test:
@@ -31,6 +35,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint
+        run: npm run lint:check
 
       - name: Typecheck
         run: npx tsc --noEmit
