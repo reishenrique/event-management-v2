@@ -5,8 +5,8 @@ import type { IUserRepository } from '../../interfaces/IUserRepository'
 export class GetUserByIdUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly cacheService: CacheService
-  ) { }
+    private readonly cacheService: CacheService,
+  ) {}
 
   async execute(id?: string) {
     if (!id || typeof id !== 'string') {
@@ -23,7 +23,7 @@ export class GetUserByIdUseCase {
       getUserById = await this.userRepository.findUserById(id)
 
       if (!getUserById) {
-      throw CustomError.NotFoundError('User not found or registered')
+        throw CustomError.NotFoundError('User not found or registered')
       }
 
       await this.cacheService.cacheValue(cacheKey, getUserById)

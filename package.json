@@ -8,7 +8,8 @@
     "start": "node build/server.js",
     "build": "tsc",
     "dev": "ts-node src/infraestructure/http/server.ts",
-    "lint": "eslint . --ext .ts,.tsx --fix"
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",

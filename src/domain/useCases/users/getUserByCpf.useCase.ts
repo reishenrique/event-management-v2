@@ -6,8 +6,8 @@ import type { IUserRepository } from '../../interfaces/IUserRepository'
 export class GetUserByCpfUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly cacheService: CacheService
-  ) { }
+    private readonly cacheService: CacheService,
+  ) {}
 
   async execute(cpf?: string) {
     if (!cpf || typeof cpf !== 'string') {

@@ -19,7 +19,6 @@ class AuthController implements IAuthController {
 
   async login(req: Request, res: Response): Promise<object> {
     try {
-
       const loginUser = loginSchemaValidator.parse(req.body)
       const token = await this.loginUseCase.execute(loginUser)
 

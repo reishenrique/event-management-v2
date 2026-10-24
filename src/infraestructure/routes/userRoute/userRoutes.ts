@@ -14,7 +14,10 @@ const userRoutes = Router()
 const userRepository = new UserRepository()
 
 const createUserUseCase = new CreateUserUseCase(userRepository)
-const getUserByCpfUseCase = new GetUserByCpfUseCase(userRepository, cacheService)
+const getUserByCpfUseCase = new GetUserByCpfUseCase(
+  userRepository,
+  cacheService,
+)
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository, cacheService)
 const updateUserByIdUseCase = new UpdateUserByIdUseCase(userRepository)
 const deleteUserByIdUseCase = new DeleteUserByIdUseCase(userRepository)
@@ -28,11 +31,7 @@ const userController = new UserController(
 )
 
 userRoutes.post('/user/new', userController.createUser)
-userRoutes.get(
-  '/user/document/:cpf',
-  verifyToken,
-  userController.getUserByCpf,
-)
+userRoutes.get('/user/document/:cpf', verifyToken, userController.getUserByCpf)
 userRoutes.get('/user/id/:id', verifyToken, userController.getUserById)
 userRoutes.put('/user/:id', verifyToken, userController.updateUserById)
 userRoutes.delete('/user/:id', verifyToken, userController.deleteUserById)
