@@ -1,3 +1,3 @@
 export enum CacheStrategiesEnum {
-    nodeCache = 'nodeCache',
+  nodeCache = 'nodeCache',
 }
